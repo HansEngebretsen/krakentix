@@ -246,44 +246,43 @@ input:checked + .slider:before { transform: translateX(12px); }
 
   .top-bar {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     position: relative;
-    padding-block: var(--space-2);
+    padding-block: 0;
   }
-  
+
   .logo-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--space-3);
     cursor: pointer;
     transition: transform 0.2s;
     &:hover { transform: scale(1.02); opacity: 0.8; }
   }
 
   .main-logo-icon {
-    width: 27px;
-    height: 27px;
-    color: var(--color-text-dark);
-    @media (min-width: 768px) { width: 36px; height: 36px; }
+    display: block;
+    flex: none;
+    width: 17px;
+    height: 21px;
+    background: var(--color-text-dark);
+    -webkit-mask: url("./assets/kraken-mono.svg") center / contain no-repeat;
+    mask: url("./assets/kraken-mono.svg") center / contain no-repeat;
   }
 
   .header-title {
-    font-size: var(--text-base);
+    font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: -0.025em;
-    text-align: center;
+    letter-spacing: 0.02em;
+    text-align: left;
     margin: 0;
-    @media (min-width: 768px) { font-size: var(--text-lg); }
+    @media (min-width: 768px) { font-size: 12px; }
   }
 
   .header-actions {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
     display: flex;
     gap: var(--space-2);
   }
@@ -1591,8 +1590,8 @@ export default function App() {
         <header className="header-system">
           <div className="top-bar">
             <div className="logo-container" onClick={() => { setSearchTerm(''); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.125" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/></svg>
-              <h2 className="header-title">hans kraken tickets</h2>
+              <span className="main-logo-icon" role="img" aria-label="Seattle Kraken" />
+              <h2 className="header-title">Kraken season ticket analyzer | Hans</h2>
             </div>
             
             <div className="header-actions">

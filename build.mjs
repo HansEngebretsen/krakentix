@@ -5,7 +5,7 @@ import * as esbuild from 'esbuild';
 import { cpSync, mkdirSync, rmSync } from 'node:fs';
 
 const serve = process.argv.includes('--serve');
-const STATIC_FILES = ['index.html', 'designs.css', 'favicon.svg'];
+const STATIC_FILES = ['index.html', 'designs.css', 'favicon.svg', 'assets'];
 
 const options = {
   entryPoints: ['src/main.tsx'],
@@ -28,5 +28,5 @@ if (serve) {
   rmSync('dist', { recursive: true, force: true });
   mkdirSync('dist');
   await esbuild.build({ ...options, outfile: 'dist/app.js' });
-  for (const f of STATIC_FILES) cpSync(f, `dist/${f}`);
+  for (const f of STATIC_FILES) cpSync(f, `dist/${f}`, { recursive: true });
 }

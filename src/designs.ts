@@ -9,21 +9,19 @@ export type Design = {
   slug: string;
   name: string;
   note: string;
-  family?: 'score' | 'editorial';
+  family?: 'kraken' | 'editorial' | 'score';
 };
 
 export const DESIGNS: Design[] = [
-  { slug: 'original', name: 'Original', note: 'The current slate system, untouched' },
-  { slug: 'score-kraken', name: 'Score · Kraken', note: 'Score’s glass + Quicksand, in deep sea & ice blue', family: 'score' },
-  { slug: 'score-magical', name: 'Score · Magical', note: 'Score’s exact violet / pink tokens', family: 'score' },
-  { slug: 'score-thirteen', name: 'Score · Thirteen', note: 'Score’s parchment “13” mode — mustard & oxblood', family: 'score' },
-  { slug: 'score-mono', name: 'Score · Mono', note: 'Score shapes in the original black & white brief', family: 'score' },
-  { slug: 'frosted', name: 'Frosted Ice', note: 'Gradient sky, heavy frosted glass cards', family: 'score' },
-  { slug: 'deep-sea', name: 'Deep Sea', note: 'Floating bioluminescent blobs behind glass', family: 'score' },
-  { slug: 'bubblegum', name: 'Rink Candy', note: 'Pastel aqua + coral, chunky soft shadows', family: 'score' },
-  { slug: 'jumbotron', name: 'Jumbotron', note: 'Arena scoreboard — LED amber numerals', family: 'score' },
+  { slug: 'original', name: 'Original', note: 'The current slate system' },
   { slug: 'mono-ledger', name: 'Mono Ledger', note: 'Say-style hairlines, Inter, quiet monochrome', family: 'editorial' },
-  { slug: 'newsprint', name: 'Newsprint', note: 'Box-score paper — serif heads, ink numerals', family: 'editorial' },
+  { slug: 'k-ice', name: 'Kraken · Ice', note: 'Ledger restraint, ice-blue halo, 4px corners', family: 'kraken' },
+  { slug: 'k-red', name: 'Kraken · Red Alert', note: 'Square 0px corners, condensed caps, one red mark', family: 'kraken' },
+  { slug: 'k-tide', name: 'Kraken · Tide', note: 'Everything pill-round, boundless blue', family: 'kraken' },
+  { slug: 'k-fin', name: 'Kraken · Fin', note: 'Asymmetric fin-cut corners, shadow blue', family: 'kraken' },
+  { slug: 'k-abyss', name: 'Kraken · Abyss', note: 'Deep sea blue with drifting ice glow', family: 'kraken' },
+  { slug: 'k-pledge', name: 'Kraken · Pledge', note: 'Big condensed numerals, type does the work', family: 'kraken' },
+  { slug: 'deep-sea', name: 'Deep Sea', note: 'Round-one glass + glow, for reference', family: 'score' },
 ];
 
 const STORAGE_KEY = 'kt-design';
