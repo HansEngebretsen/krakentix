@@ -1,15 +1,16 @@
 /* ==========================================================================
-   krakentix · design explorer
+   krakentix · designs
    Visual-only skins over the app's own classes. Nothing here changes layout
    order, data or interaction; it re-points the app's --color-* tokens and
    restyles surfaces, type and shape.
 
+   Designs: B&W Sharp (default) · Original (the app's own CSS, no skin) · Ink
+   The header's theme button cycles each one's light and dark mode.
+
    1. Tokens       the --k-* set per design (light, then dark via :has(.dark-mode))
-                   · Original family: the app's own palette, containers, hierarchy
-                   · Mono Ledger: hairline monochrome
    2. Bridge       maps --k-* tokens onto the app's --color-* tokens
-   3. Families     "editorial" hairline layout (Mono Ledger)
-   4. Per-design   small flourishes
+   3. Shared       table lines, row highlight, help dialog
+   4. Flourishes   mini-map glow, Ink's kept chip
    5. HUD          the ←/→ switcher pill (local only)
 
    Rules every skin keeps: tabular numerals, superscript $, tight number
@@ -20,66 +21,15 @@
    1. Tokens
    -------------------------------------------------------------------------- */
 html[data-design] {
-  --k-font-quick: "Quicksand", ui-rounded, system-ui, sans-serif;
   --k-font-jb: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --k-font-inter: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --k-font-grotesk: "Space Grotesk", "Inter", system-ui, sans-serif;
-  --k-font-outfit: "Outfit", "Inter", system-ui, sans-serif;
-  --k-font-condensed: "Barlow Condensed", "Inter", system-ui, sans-serif;
 
   /* defaults, overridden per design */
   --k-font-ui: var(--k-font-inter);
   --k-font-num: var(--k-font-jb);
-  --k-font-hero: var(--k-font-num);
-  --k-font-display: var(--k-font-ui);
   --k-radius-outer: clamp(22px, 5vw, 40px);
   --k-card-pad: clamp(12px, 3vw, 24px);
-  --k-border-w: 1px;
-  --k-blur: 0px;
   --k-glow-opacity: 0.4;
-  --k-num-glow: none;
-}
-/* 01 · Mono Ledger — say's hairline monochrome */
-html[data-design="mono-ledger"] {
-  --k-radius-outer: clamp(10px, 2vw, 14px);
-  --k-card-pad: clamp(10px, 2vw, 16px);
-  --k-page: #fafaf8;
-  --k-bg: #f3f3f0;
-  --k-surface: #ffffff;
-  --k-card: #ffffff;
-  --k-surface-muted: rgba(255, 255, 255, 0.5);
-  --k-border: #e6e6e1;
-  --k-border-subtle: #efefeb;
-  --k-text: #1a1a1a;
-  --k-text-2: #3d3d3d;
-  --k-muted: #8a8a85;
-  --k-accent: #1a1a1a;
-  --k-accent-soft: rgba(26, 26, 26, 0.06);
-  --k-on-accent: #ffffff;
-  --k-ink: #ffffff;
-  --k-pos: #0b8043;  --k-pos-bg: #dcefe3;  --k-pos-text: #0b6b38;
-  --k-neg: #c5221f;  --k-neg-bg: #f8dddc;  --k-neg-text: #a21b18;
-  --k-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 10px 28px rgba(0, 0, 0, 0.06);
-  --k-shadow-sm: none;
-}
-html[data-design="mono-ledger"]:has(.dark-mode) {
-  --k-page: #0b0b0c;
-  --k-bg: #111113;
-  --k-surface: #1b1b1e;
-  --k-card: #141416;
-  --k-surface-muted: rgba(0, 0, 0, 0.2);
-  --k-border: #2a2a2f;
-  --k-border-subtle: #1f1f23;
-  --k-text: #ececec;
-  --k-text-2: #a3a3a9;
-  --k-muted: #68686f;
-  --k-accent: #ececec;
-  --k-accent-soft: rgba(255, 255, 255, 0.06);
-  --k-on-accent: #0b0b0c;
-  --k-ink: #0b0b0c;
-  --k-pos: #7ee2a8;  --k-pos-bg: rgba(126, 226, 168, 0.12);  --k-pos-text: #a8f0c6;
-  --k-neg: #f28b82;  --k-neg-bg: rgba(242, 139, 130, 0.14);  --k-neg-text: #f7b4ad;
-  --k-shadow: none;
 }
 
 /* --------------------------------------------------------------------------
@@ -129,11 +79,11 @@ html[data-design]:not([data-design="original"]) body .app-container.dark-mode {
 
 
 /* --------------------------------------------------------------------------
-   1b. Original family — the app's palette, containers and hierarchy.
-   Each variant changes one thing: glow, radius, contrast, scale, or ink.
+   1b. Ink — the app's own palette, containers and hierarchy as a base,
+   then recolored in Kraken navy ink and ice.
    -------------------------------------------------------------------------- */
 
-html:is([data-design="o-glow"], [data-design="o-sharp"], [data-design="o-airy"], [data-design="o-ink"], [data-design="o-night"], [data-design="m-plex"], [data-design="m-jet"], [data-design="m-space"]) {
+html[data-design="o-ink"] {
   --k-page: #dce5eb;
   --k-bg: #dce5eb;
   --k-surface: #ebeff3;
@@ -158,7 +108,7 @@ html:is([data-design="o-glow"], [data-design="o-sharp"], [data-design="o-airy"],
   --k-font-ui: ui-sans-serif, system-ui, sans-serif;
   --k-font-num: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
-html:is([data-design="o-glow"], [data-design="o-sharp"], [data-design="o-airy"], [data-design="o-ink"], [data-design="o-night"], [data-design="m-plex"], [data-design="m-jet"], [data-design="m-space"]):has(.dark-mode) {
+html[data-design="o-ink"]:has(.dark-mode) {
   --k-page: #42476e;
   --k-bg: #42476e;
   --k-surface: #4f547f;
@@ -179,96 +129,32 @@ html:is([data-design="o-glow"], [data-design="o-sharp"], [data-design="o-airy"],
   --k-neg-bg: rgba(185, 28, 28, 0.4);
   --k-neg-text: #fca5a5;
 }
-
-/* --------------------------------------------------------------------------
-   1c. Mono variants — the Original palette, set in monospace with new radii.
-   Fonts: ui and numbers can differ. Chips take their own radius.
-   -------------------------------------------------------------------------- */
-
-html[data-design="m-plex"] {
-  --k-font-ui: "IBM Plex Mono", ui-monospace, monospace;
-  --k-font-num: "IBM Plex Mono", ui-monospace, monospace;
-  --k-radius-outer: 4px;
-  --k-card-pad: 14px;
-  --k-chip-r: 2px;
+/* Ink overrides on top of the Original base */
+html[data-design="o-ink"] {
+  --k-page: #cdd9df;
+  --k-bg: #cdd9df;
+  --k-surface: #e6eef2;
+  --k-text: #001628;
+  --k-text-2: #24465a;
+  --k-muted: rgba(0, 22, 40, 0.6);
+  --k-border: rgba(0, 22, 40, 0.18);
+  --k-border-subtle: rgba(0, 22, 40, 0.09);
+  --k-accent: #355464;
+  --k-accent-soft: #99d9d9;
 }
-html[data-design="m-jet"] {
-  --k-font-ui: "JetBrains Mono", ui-monospace, monospace;
-  --k-font-num: "JetBrains Mono", ui-monospace, monospace;
-  --k-radius-outer: 12px;
-  --k-card-pad: 16px;
-  --k-chip-r: 6px;
+html[data-design="o-ink"]:has(.dark-mode) {
+  --k-page: #001628;
+  --k-bg: #001628;
+  --k-surface: #0b2c47;
+  --k-surface-muted: rgba(0, 0, 0, 0.2);
+  --k-text: #eaf6f7;
+  --k-text-2: #b9d6dc;
+  --k-muted: rgba(185, 214, 220, 0.6);
+  --k-border: rgba(153, 217, 217, 0.2);
+  --k-border-subtle: rgba(153, 217, 217, 0.1);
+  --k-accent: #99d9d9;
+  --k-accent-soft: rgba(153, 217, 217, 0.15);
 }
-html[data-design="m-space"] {
-  --k-font-ui: "Space Mono", ui-monospace, monospace;
-  --k-font-num: "Inter", -apple-system, system-ui, sans-serif;
-  --k-radius-outer: clamp(16px, 3vw, 22px);
-  --k-card-pad: 18px;
-  --k-chip-r: 999px;
-}
-html:is([data-design="m-plex"], [data-design="m-jet"], [data-design="m-space"]) body .app-container .stat-badge,
-html:is([data-design="m-plex"], [data-design="m-jet"], [data-design="m-space"]) body .app-container .row-label,
-html:is([data-design="m-plex"], [data-design="m-jet"], [data-design="m-space"]) body .app-container .th-box {
-  border-radius: var(--k-chip-r);
-}
-
-/* Completely black and white: grayscale only, hard edges, solid black badges */
-html[data-design="m-bw"] {
-  --k-font-ui: "Inter", -apple-system, system-ui, sans-serif;
-  --k-font-num: "JetBrains Mono", ui-monospace, monospace;
-  --k-page: #ffffff;
-  --k-bg: #ffffff;
-  --k-surface: #ffffff;
-  --k-surface-muted: #ffffff;
-  --k-card: #ffffff;
-  --k-border: #000000;
-  --k-border-subtle: #d9d9d9;
-  --k-text: #000000;
-  --k-text-2: #1a1a1a;
-  --k-muted: #5c5c5c;
-  --k-accent: #000000;
-  --k-accent-soft: #ededed;
-  --k-glow: #cfcfcf;
-  --k-glow-opacity: 0.6;
-  --k-pos: #4a4a4a;
-  --k-pos-bg: #000000;
-  --k-pos-text: #ffffff;
-  --k-neg: #b3b3b3;
-  --k-neg-bg: #ffffff;
-  --k-neg-text: #000000;
-  --k-radius-outer: 0px;
-  --k-card-pad: 14px;
-  --k-chip-r: 0px;
-  --k-shadow: none;
-  --k-shadow-sm: none;
-}
-html[data-design="m-bw"]:has(.dark-mode) {
-  --k-page: #000000;
-  --k-bg: #000000;
-  --k-surface: #000000;
-  --k-surface-muted: #000000;
-  --k-card: #000000;
-  --k-border: #ffffff;
-  --k-border-subtle: #333333;
-  --k-text: #ffffff;
-  --k-text-2: #e6e6e6;
-  --k-muted: #a3a3a3;
-  --k-accent: #ffffff;
-  --k-accent-soft: #1f1f1f;
-  --k-glow: #3d3d3d;
-  --k-pos: #bdbdbd;
-  --k-pos-bg: #ffffff;
-  --k-pos-text: #000000;
-  --k-neg: #5e5e5e;
-  --k-neg-bg: #000000;
-  --k-neg-text: #ffffff;
-}
-html[data-design="m-bw"] body .app-container .stat-badge,
-html[data-design="m-bw"] body .app-container .row-label { border-radius: 0; }
-html[data-design="m-bw"] body .app-container .stat-badge.negative { box-shadow: inset 0 0 0 1px currentColor; }
-html[data-design="m-bw"] body .app-container .kept-row .label-badge { background: var(--k-text); color: var(--k-page); }
-html[data-design="m-bw"] body .app-container .section-title { text-transform: uppercase; letter-spacing: 0.04em; }
-html[data-design="m-bw"] body .app-container .summary-item .label { color: var(--k-text); }
 
 /* --------------------------------------------------------------------------
    1d. Black & white family — grayscale, with a faint green and red tint on
@@ -382,105 +268,21 @@ html[data-design="bw-sharp"] body .app-container .section-title {
   letter-spacing: 0.06em;
 }
 
-/* B&W · Plex — IBM Plex Mono everywhere, hairline boxes */
-html[data-design="bw-plex"] {
-  --k-font-ui: "IBM Plex Mono", ui-monospace, monospace;
-  --k-font-num: "IBM Plex Mono", ui-monospace, monospace;
-  --k-card-pad: 12px;
-}
-/* Plex keeps black & white but cools both ends with a hint of Kraken ice,
-   and carries the Night-style teal glow behind the mini-map in both modes */
-html[data-design="bw-plex"] {
-  --k-page: #f6fafb;
-  --k-bg: #f6fafb;
-  --k-surface: #f6fafb;
-  --k-surface-muted: #f6fafb;
-  --k-card: #f6fafb;
-  --k-border: #0b1a21;
-  --k-border-subtle: #d5e1e5;
-  --k-text: #071319;
-  --k-text-2: #13232b;
-  --k-muted: #54666e;
-  --k-accent: #071319;
-  --k-accent-soft: #e4eff2;
-  --k-glow: #a6dce2;
-  --k-glow-opacity: 0.55;
-}
-html[data-design="bw-plex"]:has(.dark-mode) {
-  --k-page: #050c10;
-  --k-bg: #050c10;
-  --k-surface: #050c10;
-  --k-surface-muted: #050c10;
-  --k-card: #050c10;
-  --k-border: #e8f4f6;
-  --k-border-subtle: #1a2a31;
-  --k-text: #eef7f9;
-  --k-text-2: #d6e5e9;
-  --k-muted: #8ea3ab;
-  --k-accent: #eef7f9;
-  --k-accent-soft: #10212a;
-  --k-glow: #2f7f8c;
-  --k-glow-opacity: 0.55;
-}
+/* --------------------------------------------------------------------------
+   3. Shared
+   -------------------------------------------------------------------------- */
 
-/* B&W · Round — soft 18px cards with a matching search field */
-html[data-design="bw-round"] {
-  --k-radius-outer: 18px;
-  --k-card-pad: 18px;
-  --k-surface: #f5f5f5;
-  --k-card: #f5f5f5;
-  --k-border: #cfcfcf;
-  --k-border-subtle: #e6e6e6;
-}
-html[data-design="bw-round"]:has(.dark-mode) {
-  --k-surface: #141414;
-  --k-card: #141414;
-  --k-border: #3a3a3a;
-  --k-border-subtle: #262626;
-}
-
-/* B&W · Serif — Newsreader heads, no boxes, ruled sections */
-html[data-design="bw-serif"] {
-  --k-font-display: "Newsreader", Georgia, serif;
-}
-html[data-design="bw-serif"] body .app-container .header-title,
-html[data-design="bw-serif"] body .app-container .section-title {
-  font-family: var(--k-font-display);
-  text-transform: none;
-  letter-spacing: 0;
-  font-weight: 500;
-}
-html[data-design="bw-serif"] body .app-container .section-title {
-  font-size: clamp(22px, 4vw, 30px);
-  border-top: 1px solid var(--k-border);
-  padding-top: 8px;
-}
-html[data-design="bw-serif"] body .app-container .season-card {
-  background: transparent;
-  border: 0;
-  padding: 0;
-}
-html[data-design="bw-serif"] body .app-container .sales-table-wrapper,
-html[data-design="bw-serif"] body .app-container .bar-chart-system {
-  border-color: var(--k-border-subtle);
-}
-html[data-design="bw-serif"] body .app-container .summary-item .value,
-html[data-design="bw-serif"] body .app-container .ledger-table .kept-row td:not(:first-child) {
-  font-family: var(--k-font-num);
-}
-
-
-/* Table lines — B&W and mono: hairlines connect the ledger rows and the sales rows */
-html:is([data-design^="bw-"], [data-design^="m-"]) body .app-container .ledger-table { border-spacing: 0; }
-html:is([data-design^="bw-"], [data-design^="m-"]) body .app-container .ledger-table tbody td { border-bottom: 1px solid var(--k-border-subtle); padding-block: 12px; }
-html:is([data-design^="bw-"], [data-design^="m-"]) body .app-container .ledger-table tbody tr:last-child td { border-bottom: 0; }
-html:is([data-design^="bw-"], [data-design^="m-"]) body .app-container .ledger-table .divider-row { display: none; }
+/* Table lines — B&W: hairlines connect the ledger rows and the sales rows */
+html[data-design^="bw-"] body .app-container .ledger-table { border-spacing: 0; }
+html[data-design^="bw-"] body .app-container .ledger-table tbody td { border-bottom: 1px solid var(--k-border-subtle); padding-block: 12px; }
+html[data-design^="bw-"] body .app-container .ledger-table tbody tr:last-child td { border-bottom: 0; }
+html[data-design^="bw-"] body .app-container .ledger-table .divider-row { display: none; }
 /* drop the boxes around KEPT / SOLD / PAID — the lines carry the connection */
-html:is([data-design^="bw-"], [data-design^="m-"]) body .app-container .ledger-table .label-badge { background: transparent !important; border: 0 !important; box-shadow: none; padding-inline: 0; color: var(--k-muted) !important; }
-html:is([data-design^="bw-"], [data-design^="m-"]) body .app-container .ledger-table .kept-row .label-badge { color: var(--k-text) !important; font-weight: 800; }
-html:is([data-design^="bw-"], [data-design^="m-"]) body .app-container .sales-table-wrapper tbody tr { border-bottom: 0; }
-html:is([data-design^="bw-"], [data-design^="m-"]) body .app-container .sales-table-wrapper tbody td { border-bottom: 1px solid var(--k-border-subtle); }
-html:is([data-design^="bw-"], [data-design^="m-"]) body .app-container .sales-table-wrapper tbody tr:last-child td { border-bottom: 0; }
+html[data-design^="bw-"] body .app-container .ledger-table .label-badge { background: transparent !important; border: 0 !important; box-shadow: none; padding-inline: 0; color: var(--k-muted) !important; }
+html[data-design^="bw-"] body .app-container .ledger-table .kept-row .label-badge { color: var(--k-text) !important; font-weight: 800; }
+html[data-design^="bw-"] body .app-container .sales-table-wrapper tbody tr { border-bottom: 0; }
+html[data-design^="bw-"] body .app-container .sales-table-wrapper tbody td { border-bottom: 1px solid var(--k-border-subtle); }
+html[data-design^="bw-"] body .app-container .sales-table-wrapper tbody tr:last-child td { border-bottom: 0; }
 
 /* B&W: the mini-map glow is the only soft effect — no other shadows */
 html[data-design^="bw-"] body .app-container :is(.modal-content, .chart-tooltip, .stat-badge) { box-shadow: none; }
@@ -503,171 +305,16 @@ html[data-design]:not([data-design="original"]) body .app-container .row-highlig
 .help-list strong { color: var(--color-text-dark); font-weight: 700; }
 hans-footer:not(:defined) { display: block; min-height: 76px; }
 
-/* 02 · Original · Glow — same palette, plus the glow behind the dots (see flourishes) */
-
-/* 03 · Original · Sharp — tighter corners, small chips */
-html[data-design="o-sharp"] {
-  --k-radius-outer: 4px;
-  --k-card-pad: 12px;
-}
-html[data-design="o-sharp"] body .app-container .stat-badge,
-html[data-design="o-sharp"] body .app-container .row-label { border-radius: 2px; }
-
-/* 04 · Original · Ink — Kraken navy ink and ice, same containers */
-html[data-design="o-ink"] {
-  --k-page: #cdd9df;
-  --k-bg: #cdd9df;
-  --k-surface: #e6eef2;
-  --k-text: #001628;
-  --k-text-2: #24465a;
-  --k-muted: rgba(0, 22, 40, 0.6);
-  --k-border: rgba(0, 22, 40, 0.18);
-  --k-border-subtle: rgba(0, 22, 40, 0.09);
-  --k-accent: #355464;
-  --k-accent-soft: #99d9d9;
-}
-html[data-design="o-ink"]:has(.dark-mode) {
-  --k-page: #001628;
-  --k-bg: #001628;
-  --k-surface: #0b2c47;
-  --k-surface-muted: rgba(0, 0, 0, 0.2);
-  --k-text: #eaf6f7;
-  --k-text-2: #b9d6dc;
-  --k-muted: rgba(185, 214, 220, 0.6);
-  --k-border: rgba(153, 217, 217, 0.2);
-  --k-border-subtle: rgba(153, 217, 217, 0.1);
-  --k-accent: #99d9d9;
-  --k-accent-soft: rgba(153, 217, 217, 0.15);
-}
-
-/* 05 · Original · Airy — larger radii, more room, bigger type */
-html[data-design="o-airy"] {
-  --k-radius-outer: clamp(16px, 3.5vw, 26px);
-  --k-card-pad: clamp(18px, 4vw, 40px);
-}
-
-/* 06 · Original · Night — deep Kraken navy with the glow, dark by default */
-html[data-design="o-night"], [data-design="m-plex"], [data-design="m-jet"], [data-design="m-space"]:has(.dark-mode) {
-  --k-page: #001628;
-  --k-bg: #001628;
-  --k-surface: #0a2236;
-  --k-surface-muted: rgba(0, 0, 0, 0.2);
-  --k-text: #eef7f8;
-  --k-text-2: #bcd6dd;
-  --k-muted: rgba(188, 214, 221, 0.6);
-  --k-border: rgba(153, 217, 217, 0.18);
-  --k-border-subtle: rgba(153, 217, 217, 0.09);
-  --k-accent: #99d9d9;
-  --k-accent-soft: rgba(153, 217, 217, 0.14);
-  --k-glow: #3a8a9a;
-  --k-glow-opacity: 0.55;
-  --k-pos: #4fd1a5;
-  --k-pos-bg: rgba(79, 209, 165, 0.14);
-  --k-pos-text: #93e8c9;
-  --k-neg: #ff6b7e;
-  --k-neg-bg: rgba(255, 107, 126, 0.15);
-  --k-neg-text: #ffadb7;
-}
-
 /* --------------------------------------------------------------------------
-   3b. Editorial family — hairlines, small radii, quiet surfaces
+   4. Flourishes
    -------------------------------------------------------------------------- */
 
-html[data-family="editorial"] body .app-container {
-  .header-title {
-    font-family: var(--k-font-display);
-    font-weight: 600;
-    font-size: 12px;
-    letter-spacing: 0.02em;
-    text-transform: none;
-    @media (min-width: 768px) { font-size: 13px; }
-  }
-  .icon-btn {
-    border-radius: 8px;
-    &:hover { transform: none; opacity: 1; background: var(--k-bg); }
-  }
-  .search-input {
-    font-family: var(--k-font-ui);
-    border-radius: 10px;
-    background: var(--k-surface);
-    border: 1px solid var(--k-border);
-    &:focus { border-color: var(--k-text); box-shadow: 0 0 0 1px var(--k-text); }
-  }
-
-  .summary-item .value { font-family: var(--k-font-hero); font-weight: 600; letter-spacing: -0.03em; }
-  .summary-item .label { font-family: var(--k-font-ui); font-size: 9.5px; letter-spacing: 0.12em; font-weight: 600; }
-  .summary-item.full-width-mobile { border-top: 1px solid var(--k-text); padding-top: 12px; }
-  .mini-map-header .attended-stat,
-  .mini-map-sub-stat,
-  .mini-map-legend { font-family: var(--k-font-ui); font-weight: 600; letter-spacing: 0.1em; }
-  .mini-map-season-marker {
-    font-family: var(--k-font-ui);
-    background: transparent;
-    border: 1px solid var(--k-border);
-    border-radius: 3px;
-  }
-  .stat-badge { border-radius: 4px; }
-
-  .section-title {
-    font-family: var(--k-font-display);
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    font-size: 20px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid var(--k-text);
-    @media (min-width: 768px) { font-size: 26px; }
-  }
-  .season-card {
-    background: var(--k-card);
-    border: 1px solid var(--k-border);
-    padding: var(--k-card-pad);
-    box-shadow: var(--k-shadow);
-    &.no-padding { background: transparent; border: none; padding: 0; box-shadow: none; }
-  }
-  .ledger-container { background: var(--k-bg); }
-  .ledger-table {
-    th .th-box { background: transparent; border-bottom: 1px solid var(--k-border); font-family: var(--k-font-ui); letter-spacing: 0.1em; color: var(--k-muted); }
-    .row-label { border-radius: 3px; font-family: var(--k-font-ui); letter-spacing: 0.1em; }
-    .kept-row td:not(:first-child) { font-family: var(--k-font-hero); }
-    .kept-row .label-badge { background: var(--k-text); color: var(--k-ink); }
-    .divider-row .line { border-bottom: 1px solid var(--k-text); }
-  }
-  .donut-visual {
-    svg circle:first-child { stroke: var(--k-border-subtle); }
-    .percent { font-family: var(--k-font-hero); font-weight: 600; }
-    .text { font-family: var(--k-font-ui); color: var(--k-muted); }
-  }
-
-  .bar-chart-system { border-color: var(--k-border); }
-  .bar-chart-system .bar { border-radius: 1px !important; }
-  .chart-tooltip { color: var(--k-ink); border-radius: 4px; font-family: var(--k-font-ui); }
-
-  .sales-table-wrapper {
-    border-color: var(--k-border);
-    thead { background: transparent; border-bottom: 1px solid var(--k-text); font-family: var(--k-font-ui); letter-spacing: 0.1em; }
-    tbody tr { border-bottom-color: var(--k-border-subtle); }
-    tbody tr:hover { background: var(--k-bg); }
-    tbody tr.is-hovered { background: var(--k-accent-soft); }
-  }
-
-  .modal-content { border-radius: 12px; background: var(--k-surface); padding: 1.25rem; }
-  .modal-title, .switch-container { font-family: var(--k-font-ui); }
-  input:checked + .slider { background: var(--k-text); }
-  .slider::before { background: var(--k-ink); }
-  .money-token .sign, .money-token .suffix { font-family: var(--k-font-ui); }
-}
-
-
-/* --------------------------------------------------------------------------
-   4. Per-design flourishes
-   -------------------------------------------------------------------------- */
-
-/* Glow behind the attended-games dot grid (Glow and Night) */
-html:is([data-design="o-glow"], [data-design="o-night"], [data-design="m-plex"], [data-design="m-jet"], [data-design="m-space"], [data-design^="bw-"]) body .app-container .summary-item.full-width-mobile {
+/* Glow behind the attended-games dot grid (B&W) */
+html[data-design^="bw-"] body .app-container .summary-item.full-width-mobile {
   position: relative;
   isolation: isolate;
 }
-html:is([data-design="o-glow"], [data-design="o-night"], [data-design="m-plex"], [data-design="m-jet"], [data-design="m-space"], [data-design^="bw-"]) body .app-container .summary-item.full-width-mobile::before {
+html[data-design^="bw-"] body .app-container .summary-item.full-width-mobile::before {
   content: "";
   position: absolute;
   z-index: -1;
@@ -677,20 +324,6 @@ html:is([data-design="o-glow"], [data-design="o-night"], [data-design="m-plex"],
   opacity: var(--k-glow-opacity);
   filter: blur(18px);
   pointer-events: none;
-}
-
-/* Airy: scale the hierarchy — bigger season heads, averages and gaps */
-html[data-design="o-airy"] body .app-container .dashboard-layout { gap: clamp(32px, 6vw, 64px); }
-html[data-design="o-airy"] body .app-container .section-title {
-  font-size: clamp(22px, 4vw, 30px);
-  letter-spacing: 0.06em;
-}
-html[data-design="o-airy"] body .app-container .summary-item .value {
-  font-size: clamp(26px, 5vw, 48px);
-}
-html[data-design="o-airy"] body .app-container .summary-item .label {
-  font-size: 10px;
-  letter-spacing: 0.14em;
 }
 
 /* Ink: the kept chip takes the navy ink, not the grey */
@@ -741,4 +374,3 @@ html[data-design="o-ink"] body .app-container .kept-row .label-badge {
 .kt-hud-count { font: 500 10px/1 "JetBrains Mono", ui-monospace, monospace; opacity: 0.55; }
 .kt-hud-name { font-weight: 600; }
 .kt-hud-note { font-size: 10.5px; opacity: 0.6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-

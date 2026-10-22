@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { getDesign, setDesign } from './designs';
 
 // Design Tokens & Semantic Variables (Scaled to 75%)
 const CSS_VARS = `
@@ -1218,6 +1219,7 @@ const checkMatch = (name1, name2) => {
 };
 
 const isPlayoff = (name) => name.toLowerCase().includes('playoff');
+const shortName = (name) => name.replace(/\s*\(.*\)$/, '');
 
 const buildSeasonsData = () => {
   const seasonConfigs = [
@@ -1525,23 +1527,95 @@ const SeasonLedger = ({ metrics }) => {
   );
 };
 
+// The theme button walks each design's dark and light mode in turn.
+const THEME_CYCLE = [
+  { design: 'bw-sharp', dark: true, label: 'B&W Sharp, dark', icon: 'moon' },
+  { design: 'bw-sharp', dark: false, label: 'B&W Sharp, light', icon: 'sun' },
+  { design: 'original', dark: false, label: 'Original, light', icon: 'berry' },
+  { design: 'original', dark: true, label: 'Original, dark', icon: 'berry' },
+  { design: 'o-ink', dark: false, label: 'Ink, light', icon: 'ink' },
+  { design: 'o-ink', dark: true, label: 'Ink, dark', icon: 'ink' },
+];
+
+// Current theme's mark: moon / sun for B&W, a blueberry for Original's
+// slate-blue, an ink drop for Ink. Dark modes fill the shape.
+const ThemeIcon = ({ icon, dark }) => {
+  const fill = dark ? 'currentColor' : 'none';
+  const common = { width: 18, height: 18, viewBox: '0 0 24 24', stroke: 'currentColor', strokeWidth: 1.5, strokeLinecap: 'round', strokeLinejoin: 'round' };
+  if (icon === 'sun') return (
+    <svg {...common} fill="none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  );
+  if (icon === 'berry') return (
+    <svg {...common} fill="none"><circle cx="12" cy="13.5" r="8" fill={fill} fillOpacity={dark ? 0.35 : 0}/><path d="M9.5 8.5l1.2-2.3L12 8l1.3-1.8 1.2 2.3"/><circle cx="9" cy="14" r="0.6" fill="currentColor"/></svg>
+  );
+  if (icon === 'ink') return (
+    <svg {...common} fill="none"><path d="M12 2.7l5.7 5.6a8 8 0 1 1-11.4 0z" fill={fill} fillOpacity={dark ? 0.35 : 0}/></svg>
+  );
+  return (
+    <svg {...common} fill={fill} fillOpacity={0.35}><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  );
+};
+
+const readStoredDark = () => {
+  try {
+    const v = localStorage.getItem('kt-dark');
+    return v === null ? null : v === '1';
+  } catch { return null; }
+};
+
 export default function App() {
   const seasonsData = useMemo(() => buildSeasonsData(), []);
   const [searchTerm, setSearchTerm] = useState('');
   // B&W Sharp opens dark; the design is already applied before React mounts
-  const [isDarkMode, setIsDarkMode] = useState(() => document.documentElement.dataset.design === 'bw-sharp');
+  const [design, setDesignState] = useState(getDesign);
+  // first visit opens B&W Sharp dark; after that, whatever you left it on
+  const [isDarkMode, setIsDarkMode] = useState(() => readStoredDark() ?? getDesign() === 'bw-sharp');
+
+  useEffect(() => {
+    const onDesign = (e) => setDesignState(e.detail);
+    window.addEventListener('kt-design', onDesign);
+    return () => window.removeEventListener('kt-design', onDesign);
+  }, []);
+  useEffect(() => {
+    try { localStorage.setItem('kt-dark', isDarkMode ? '1' : '0'); } catch { /* private mode */ }
+  }, [isDarkMode]);
+
+  const themeIndex = Math.max(0, THEME_CYCLE.findIndex(t => t.design === design && t.dark === isDarkMode));
+  const theme = THEME_CYCLE[themeIndex];
+  const nextTheme = THEME_CYCLE[(themeIndex + 1) % THEME_CYCLE.length];
+  const cycleTheme = () => {
+    setIsDarkMode(nextTheme.dark);
+    setDesign(nextTheme.design);
+  };
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
 
-  // Deterministic counts behind the ? dialog, straight from the season data
-  const helpStats = useMemo(() => ({
-    seasons: seasonsData.length,
-    games: seasonsData.reduce((a, s) => a + s.metrics.totalGamesInPackage, 0),
-    bought: seasonsData.reduce((a, s) => a + s.metrics.totalSold + s.metrics.totalKept, 0),
-    sold: seasonsData.reduce((a, s) => a + s.metrics.totalSold, 0),
-    kept: seasonsData.reduce((a, s) => a + s.metrics.totalKept, 0),
-    attended: seasonsData.reduce((a, s) => a + s.metrics.gamesAttended, 0),
-  }), [seasonsData]);
+  // Facts behind the ? dialog, computed from the season data
+  const helpStats = useMemo(() => {
+    const all = seasonsData.flatMap(season => season.sales);
+    const playoffs = all.filter(sale => isPlayoff(sale.opponent));
+    // games where every seat was resold (playoff singles and 21-22 face-value rows keep seats)
+    const flips = all.filter(sale => sale.ticketsSold > 0 && sale.ticketsKept === 0);
+    const pick = (list, better) => list.reduce((a, b) => (better(b, a) ? b : a), list[0]);
+    const resoldTo = flips.reduce((acc, sale) => {
+      const name = shortName(sale.opponent);
+      acc[name] = (acc[name] || 0) + 1;
+      return acc;
+    }, {});
+    const [topOpponent, topCount] = Object.entries(resoldTo).sort((a, b) => b[1] - a[1])[0];
+    return {
+      seasons: seasonsData.length,
+      evaluated: all.length,
+      playoffs: playoffs.length,
+      bestPlayoff: pick(playoffs, (b, a) => b.gainLoss > a.gainLoss),
+      flips: flips.length,
+      wins: flips.filter(sale => sale.gainLoss > 0).length,
+      best: pick(flips, (b, a) => b.gainLoss > a.gainLoss),
+      worst: pick(flips, (b, a) => b.gainLoss < a.gainLoss),
+      topOpponent,
+      topCount,
+    };
+  }, [seasonsData]);
   const [hideAttended, setHideAttended] = useState(true);
   const [hoveredSale, setHoveredSale] = useState(null);
   const [highlightedRow, setHighlightedRow] = useState(null);
@@ -1679,13 +1753,14 @@ export default function App() {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
           </div>
-          <p className="help-lede">Every number is my season-ticket package, one row per game, matched to the official schedule. Playoff games are not counted.</p>
+          <p className="help-lede"><strong>{helpStats.evaluated}</strong> games across {helpStats.seasons} seasons, each matched to the official NHL schedule. Every seat I resold went through Ticketmaster's official resale platform, nowhere else.</p>
           <ul className="help-list">
-            <li><strong>{helpStats.seasons}</strong> seasons, 2021–2026</li>
-            <li><strong>{helpStats.games}</strong> package games, 3 seats each</li>
-            <li><strong>{helpStats.bought}</strong> tickets held: <strong>{helpStats.sold}</strong> resold, <strong>{helpStats.kept}</strong> used</li>
-            <li><strong>{helpStats.attended}</strong> games attended in person</li>
-            <li>Gain or loss = resale price minus the seat's cost</li>
+            <li><strong>{helpStats.wins} of {helpStats.flips}</strong> games I resold beat what I paid ({Math.round(helpStats.wins / helpStats.flips * 100)}%)</li>
+            <li>Best flip <FormatMoney val={helpStats.best.gainLoss} showPlus={true} bold={true} /> vs {shortName(helpStats.best.opponent)} ({formatDate(helpStats.best.date)}); worst <FormatMoney val={helpStats.worst.gainLoss} showPlus={true} bold={true} /> vs {shortName(helpStats.worst.opponent)} ({formatDate(helpStats.worst.date)})</li>
+            {helpStats.playoffs > 0 && (
+              <li><strong>{helpStats.playoffs}</strong> playoff games are in the tables and map but kept out of season totals. The best one went for <FormatMoney val={helpStats.bestPlayoff.gainLoss} showPlus={true} bold={true} /> vs {shortName(helpStats.bestPlayoff.opponent)}</li>
+            )}
+            <li>Most resold: <strong>{helpStats.topOpponent}</strong>, {helpStats.topCount} games</li>
           </ul>
           <hans-footer></hans-footer>
         </div>
@@ -1723,12 +1798,8 @@ export default function App() {
                   <circle cx="12" cy="12" r="3"></circle>
                 </svg>
               </button>
-              <button className="icon-btn" onClick={() => setIsDarkMode(!isDarkMode)} title="Toggle Theme">
-                {isDarkMode ? (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-                ) : (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-                )}
+              <button className="icon-btn" onClick={cycleTheme} title={`${theme.label} · next: ${nextTheme.label}`} aria-label={`Theme: ${theme.label}. Switch to ${nextTheme.label}`}>
+                <ThemeIcon icon={theme.icon} dark={theme.dark} />
               </button>
             </div>
             </div>
@@ -1747,7 +1818,7 @@ export default function App() {
                 </div>
                 <div className="summary-item">
                   <div className="value"><FormatMoney val={aggregateStats.avgCostPerGame} /></div>
-                  <div className="label">avg cost per game</div>
+                  <div className="label">Avg cost per game (3 tix)</div>
                 </div>
                 <div className="summary-item full-width-mobile">
                   <div className="mini-map-header">

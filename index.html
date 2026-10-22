@@ -13,7 +13,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
   <script src="https://haaans.com/shared/footer.js" defer></script>
   <link rel="stylesheet" href="./designs.css">
 
@@ -22,8 +22,8 @@
     (function () {
       try {
         var q = new URLSearchParams(location.search).get('design');
-        var d = q || localStorage.getItem('kt-design');
-        if (d) document.documentElement.dataset.design = d;
+        var d = q || localStorage.getItem('kt-design') || 'bw-sharp';
+        document.documentElement.dataset.design = d;
       } catch (e) {}
     })();
   </script>

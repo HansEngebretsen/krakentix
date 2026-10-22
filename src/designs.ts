@@ -1,33 +1,22 @@
-// Design explorer: visual-only skins layered over the app via designs.css.
-// Each design is pure CSS keyed off <html data-design="…" data-family="…">;
-// nothing here touches app state, data or interactions.
+// Designs: visual-only skins layered over the app via designs.css.
+// Each design is pure CSS keyed off <html data-design="…">; nothing here
+// touches app data or interactions.
 //
-// ←/→ flips designs. The HUD shows on localhost or with ?designs in the URL;
-// ?design=<slug> picks one anywhere (and is remembered in localStorage).
+// The theme button in the header cycles designs through setDesign(). Locally
+// (or with ?designs in the URL) a HUD also flips them with ←/→;
+// ?design=<slug> picks one anywhere. The choice is remembered in localStorage.
 
 export type Design = {
   slug: string;
   name: string;
   note: string;
-  family?: 'editorial';
 };
 
+// First entry is the default.
 export const DESIGNS: Design[] = [
-  { slug: 'original', name: 'Original', note: 'The app as it was, anchor and all' },
-  { slug: 'o-glow', name: 'Original · Glow', note: 'Same palette, with the soft glow behind the attended dots' },
-  { slug: 'o-sharp', name: 'Original · Sharp', note: 'Same containers, tighter 4px corners' },
-  { slug: 'o-ink', name: 'Original · Ink', note: 'Kraken navy ink and ice, same containers' },
-  { slug: 'o-airy', name: 'Original · Airy', note: 'Bigger type, more room, rounder cards' },
-  { slug: 'o-night', name: 'Original · Night', note: 'Original light; deep Kraken navy in dark mode, with the glow' },
-  { slug: 'm-plex', name: 'Mono · Plex', note: 'IBM Plex Mono throughout, 4px corners' },
-  { slug: 'm-jet', name: 'Mono · Jet', note: 'JetBrains Mono throughout, rounder 12px cards' },
-  { slug: 'm-space', name: 'Mono · Space', note: 'Space Mono labels, Inter numerals, pill chips' },
-  { slug: 'm-bw', name: 'Black & White', note: 'Pure grayscale, hard edges, solid black badges' },
-  { slug: 'bw-sharp', name: 'B&W · Sharp', note: 'Grayscale, hard edges, faint green and red on gains and losses' },
-  { slug: 'bw-plex', name: 'B&W · Plex', note: 'IBM Plex Mono throughout, hairline boxes' },
-  { slug: 'bw-round', name: 'B&W · Round', note: 'Soft 18px cards with a matching search field' },
-  { slug: 'bw-serif', name: 'B&W · Serif', note: 'Newsreader headings, no boxes, ruled sections' },
-  { slug: 'mono-ledger', name: 'Mono Ledger', note: 'Say-style hairlines, Inter, quiet monochrome', family: 'editorial' },
+  { slug: 'bw-sharp', name: 'B&W · Sharp', note: 'Ice-cast black and white, hard edges, soft green and red' },
+  { slug: 'original', name: 'Original', note: 'The app as it was: slate and blueberry' },
+  { slug: 'o-ink', name: 'Original · Ink', note: 'Original containers in Kraken navy ink and ice' },
 ];
 
 const STORAGE_KEY = 'kt-design';
@@ -46,11 +35,30 @@ function indexOfSlug(slug: string | null | undefined) {
   return i === -1 ? 0 : i;
 }
 
+let current = 0;
+let onChange: (() => void) | null = null;
+
 function apply(design: Design) {
-  const root = document.documentElement;
-  root.dataset.design = design.slug;
-  if (design.family) root.dataset.family = design.family;
-  else delete root.dataset.family;
+  document.documentElement.dataset.design = design.slug;
+  window.dispatchEvent(new CustomEvent('kt-design', { detail: design.slug }));
+}
+
+export function getDesign() {
+  return DESIGNS[current].slug;
+}
+
+export function setDesign(slug: string) {
+  current = indexOfSlug(slug);
+  const d = DESIGNS[current];
+  apply(d);
+  store.set(d.slug);
+  // keep a ?design= link in step, so a reload lands on the same design
+  const url = new URL(location.href);
+  if (url.searchParams.has('design')) {
+    url.searchParams.set('design', d.slug);
+    history.replaceState(null, '', url);
+  }
+  onChange?.();
 }
 
 export function initDesignSwitcher() {
@@ -58,8 +66,8 @@ export function initDesignSwitcher() {
   const local = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || location.hostname.endsWith('.local');
   const showHud = local || params.has('designs');
 
-  let index = indexOfSlug(params.get('design') || store.get());
-  apply(DESIGNS[index]);
+  current = indexOfSlug(params.get('design') || store.get());
+  apply(DESIGNS[current]);
   if (!showHud) return;
 
   const hud = document.createElement('div');
@@ -79,24 +87,22 @@ export function initDesignSwitcher() {
   let idleTimer = 0;
 
   const render = () => {
-    const d = DESIGNS[index];
-    count.textContent = `${String(index).padStart(2, '0')} / ${String(DESIGNS.length - 1).padStart(2, '0')}`;
+    const d = DESIGNS[current];
+    count.textContent = `${current + 1} / ${DESIGNS.length}`;
     name.textContent = d.name;
     note.textContent = d.note;
     hud.classList.add('is-active');
     clearTimeout(idleTimer);
     idleTimer = window.setTimeout(() => hud.classList.remove('is-active'), 2200);
   };
+  onChange = render;
 
   const go = (step: number) => {
-    index = (index + step + DESIGNS.length) % DESIGNS.length;
-    const d = DESIGNS[index];
-    apply(d);
-    store.set(d.slug);
+    const next = DESIGNS[(current + step + DESIGNS.length) % DESIGNS.length];
     const url = new URL(location.href);
-    url.searchParams.set('design', d.slug);
+    url.searchParams.set('design', next.slug);
     history.replaceState(null, '', url);
-    render();
+    setDesign(next.slug);
   };
 
   hud.addEventListener('click', e => {
