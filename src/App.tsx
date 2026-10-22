@@ -233,7 +233,7 @@ input:checked + .slider:before { transform: translateX(12px); }
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
-  @media (min-width: 768px) { gap: var(--space-8); }
+  @media (min-width: 768px) { gap: calc(var(--space-8) + 8px); }
 
   .top-bar {
     display: flex;
