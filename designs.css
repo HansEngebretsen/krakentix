@@ -329,45 +329,54 @@ html[data-design^="bw-"]:has(.dark-mode) {
 /* Sharp: a barely-there ice cast in the blacks and whites, and cleaner
    (less muddy) green / red that still read as a tint, not a highlight */
 html[data-design="bw-sharp"] {
-  --k-page: #fafcfd;
-  --k-bg: #fafcfd;
-  --k-surface: #fafcfd;
-  --k-surface-muted: #fafcfd;
-  --k-card: #fafcfd;
-  --k-border: #050d12;
-  --k-border-subtle: #dbe3e6;
-  --k-text: #050d12;
-  --k-text-2: #121c22;
-  --k-muted: #58656b;
-  --k-accent: #050d12;
-  --k-accent-soft: #ebf1f3;
-  --k-pos: #3a9a6e;
-  --k-pos-bg: #e8f6ee;
-  --k-pos-text: #1d6b47;
-  --k-neg: #d0575d;
-  --k-neg-bg: #fcebec;
-  --k-neg-text: #a3343a;
+  --k-page: #f5f9fb;
+  --k-bg: #f5f9fb;
+  --k-surface: #f5f9fb;
+  --k-surface-muted: #f5f9fb;
+  --k-card: #f5f9fb;
+  --k-border: #04101a;
+  --k-border-subtle: #d6e1e6;
+  --k-text: #04101a;
+  --k-text-2: #102029;
+  --k-muted: #546670;
+  --k-accent: #04101a;
+  --k-accent-soft: #e6eff3;
+  --k-glow: #b6dbe3;
+  --k-glow-opacity: 0.75;
+  --k-pos: #5b9c80;
+  --k-pos-bg: #eaf4ef;
+  --k-pos-text: #2b6a50;
+  --k-neg: #c47b7f;
+  --k-neg-bg: #f8eeee;
+  --k-neg-text: #8f4a4e;
 }
 html[data-design="bw-sharp"]:has(.dark-mode) {
-  --k-page: #04090c;
-  --k-bg: #04090c;
-  --k-surface: #04090c;
-  --k-surface-muted: #04090c;
-  --k-card: #04090c;
-  --k-border: #f2f7f9;
-  --k-border-subtle: #18232a;
-  --k-text: #f2f7f9;
-  --k-text-2: #dbe5e9;
-  --k-muted: #8d9ba1;
-  --k-accent: #f2f7f9;
-  --k-accent-soft: #0f1b22;
-  --k-pos: #5cc995;
-  --k-pos-bg: #0d2118;
-  --k-pos-text: #a6e6c5;
-  --k-neg: #f07a7f;
-  --k-neg-bg: #2a1214;
-  --k-neg-text: #f6b8bb;
+  --k-page: #030b12;
+  --k-bg: #030b12;
+  --k-surface: #030b12;
+  --k-surface-muted: #030b12;
+  --k-card: #030b12;
+  --k-border: #eef6fa;
+  --k-border-subtle: #16242d;
+  --k-text: #eef6fa;
+  --k-text-2: #d6e4ea;
+  --k-muted: #8a9ca5;
+  --k-accent: #eef6fa;
+  --k-accent-soft: #0d1c25;
+  --k-glow: #2a6f7c;
+  --k-glow-opacity: 0.65;
+  --k-pos: #72bc9b;
+  --k-pos-bg: #0e1f19;
+  --k-pos-text: #a9dcc4;
+  --k-neg: #dc9095;
+  --k-neg-bg: #24151a;
+  --k-neg-text: #efc0c3;
 }
+/* Sharp: mini-map guide text a step up so it reads at a glance */
+html[data-design="bw-sharp"] body .app-container .mini-map-header .attended-stat { font-size: 10px; }
+html[data-design="bw-sharp"] body .app-container .mini-map-sub-stat { font-size: 8.5px; }
+html[data-design="bw-sharp"] body .app-container .mini-map-legend { font-size: 9px; }
+html[data-design="bw-sharp"] body .app-container .mini-map-season-marker { font-size: 8.5px; }
 html[data-design="bw-sharp"] body .app-container .section-title {
   text-transform: uppercase;
   letter-spacing: 0.06em;
