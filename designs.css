@@ -715,7 +715,6 @@ html[data-design="o-ink"] body .app-container .kept-row .label-badge {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   opacity: 0.4;
-  transition: opacity 0.3s;
 }
 .kt-hud:hover, .kt-hud.is-active { opacity: 1; }
 .kt-hud-btn {

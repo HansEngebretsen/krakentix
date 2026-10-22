@@ -127,7 +127,6 @@ const CSS_VARS = `
   justify-content: center;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s;
 }
 .modal-overlay.open {
   opacity: 1;
@@ -141,11 +140,6 @@ const CSS_VARS = `
   width: 90%;
   max-width: 300px;
   box-shadow: 0 7.5px 22.5px rgba(0,0,0,0.2);
-  transform: translateY(15px);
-  transition: transform 0.2s;
-}
-.modal-overlay.open .modal-content {
-  transform: translateY(0);
 }
 .modal-header {
   display: flex;
@@ -172,7 +166,6 @@ const CSS_VARS = `
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s;
   border-radius: 50%;
 }
 .modal-close:hover { color: var(--color-text-dark); background: var(--color-border-subtle); }
@@ -200,7 +193,6 @@ const CSS_VARS = `
   cursor: pointer;
   top: 0; left: 0; right: 0; bottom: 0;
   background-color: var(--color-border-base);
-  transition: .4s;
   border-radius: 18px;
 }
 .slider:before {
@@ -211,7 +203,6 @@ const CSS_VARS = `
   left: 2.25px;
   bottom: 2.25px;
   background-color: var(--color-surface);
-  transition: .4s;
   border-radius: 50%;
 }
 input:checked + .slider { background-color: var(--color-text-dark); }
@@ -224,7 +215,6 @@ input:checked + .slider:before { transform: translateX(12px); }
   color: var(--color-text-dark);
   font-family: var(--font-sans);
   padding: 0 var(--space-4) var(--space-6);
-  transition: background-color 0.2s, color 0.2s;
   @media (min-width: 768px) { padding: 0 var(--space-6) var(--space-12); }
   @media (min-width: 1024px) { padding: 0 var(--space-8) var(--space-16); }
 }
@@ -263,8 +253,7 @@ input:checked + .slider:before { transform: translateX(12px); }
     align-items: center;
     gap: var(--space-2);
     cursor: pointer;
-    transition: transform 0.2s;
-    &:hover { transform: scale(1.02); opacity: 0.8; }
+    &:hover { opacity: 0.8; }
   }
 
   .main-logo-icon {
@@ -316,9 +305,8 @@ input:checked + .slider:before { transform: translateX(12px); }
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
     border-radius: 50%;
-    &:hover { opacity: 0.7; transform: scale(1.1); background: var(--color-border-subtle); }
+    &:hover { opacity: 0.7; background: var(--color-border-subtle); }
   }
 
   .header-right {
@@ -376,7 +364,6 @@ input:checked + .slider:before { transform: translateX(12px); }
       font-family: var(--font-mono);
       border-radius: var(--radius-header);
       color: var(--color-text-dark);
-      transition: all 0.2s;
 
       &:focus {
         outline: none;
@@ -617,13 +604,11 @@ input:checked + .slider:before { transform: translateX(12px); }
   inset: 0;
   border-radius: 50%;
   background-color: var(--dot-color);
-  transition: transform 0.1s ease-out;
 }
 .mini-map-dot:hover {
   z-index: 50;
 }
 .mini-map-dot:hover::before {
-  transform: scale(1.6);
   box-shadow: 0 0 0 1.5px var(--color-surface);
 }
 
@@ -817,7 +802,6 @@ input:checked + .slider:before { transform: translateX(12px); }
         
         .bar {
           width: 100%;
-          transition: opacity 0.1s;
           cursor: pointer;
           
           &:hover {
@@ -868,7 +852,6 @@ input:checked + .slider:before { transform: translateX(12px); }
       @media (min-width: 768px) { font-size: var(--text-lg); }
       tr {
         border-bottom: 1px solid var(--color-bg-main);
-        transition: background 0.15s;
         &.is-hovered { background: var(--color-border-subtle); }
         &:hover { background: var(--color-bg-main); }
       }
