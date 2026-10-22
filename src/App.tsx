@@ -281,6 +281,21 @@ input:checked + .slider:before { transform: translateX(12px); }
     margin: 0;
     @media (min-width: 768px) { font-size: 12px; }
   }
+  .header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .header-subtitle {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--color-text-dim);
+    margin: 0;
+    @media (min-width: 768px) { font-size: 12px; }
+  }
 
   .header-actions {
     display: flex;
@@ -1591,7 +1606,10 @@ export default function App() {
           <div className="top-bar">
             <div className="logo-container" onClick={() => { setSearchTerm(''); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
               <span className="main-logo-icon" role="img" aria-label="Seattle Kraken" />
-              <h2 className="header-title">Kraken season ticket analyzer | Hans</h2>
+              <div className="header-text">
+                <h2 className="header-title">Kraken season ticket analyzer | Hans</h2>
+                <p className="header-subtitle">Cost analyzer for Kraken season tickets paid and sold by Hans 2021–2026</p>
+              </div>
             </div>
             
             <div className="header-actions">
