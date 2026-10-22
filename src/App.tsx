@@ -242,7 +242,8 @@ input:checked + .slider:before { transform: translateX(12px); }
 .header-system {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--space-4);
+  @media (min-width: 768px) { gap: var(--space-6); }
 
   .top-bar {
     display: flex;
@@ -259,7 +260,7 @@ input:checked + .slider:before { transform: translateX(12px); }
   .logo-container {
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
     gap: var(--space-2);
     cursor: pointer;
     transition: transform 0.2s;
@@ -329,9 +330,10 @@ input:checked + .slider:before { transform: translateX(12px); }
     min-width: 0;
   }
   @media (max-width: 767px) {
-    .top-bar { flex-wrap: wrap; row-gap: var(--space-4); }
+    .top-bar { flex-wrap: wrap; row-gap: var(--space-2); padding: 10px 12px 0; }
     .logo-container { flex: 0 0 100%; min-width: 0; }
     .header-right { flex: 0 0 100%; order: 2; }
+    .top-bar .header-right .search-container { flex: 1 1 auto; }
   }
   .header-right .search-container {
     flex: 0 1 240px;
@@ -340,9 +342,9 @@ input:checked + .slider:before { transform: translateX(12px); }
   }
   .header-right .search-container .search-input {
     padding: 4px 26px 4px 10px;
-    font-size: 10.5px;
+    font-size: 11.5px;
     font-weight: 400;
-    @media (min-width: 768px) { padding: 4px 26px 4px 10px; font-size: 10.5px; }
+    @media (min-width: 768px) { padding: 4px 26px 4px 10px; font-size: 11.5px; }
   }
   .header-right .search-clear { right: 6px; }
   .search-kbd {
@@ -480,7 +482,7 @@ input:checked + .slider:before { transform: translateX(12px); }
   font-family: var(--font-mono);
 
   @media (min-width: 768px) { padding: var(--space-10); gap: var(--space-12); }
-  @media (min-width: 1024px) { grid-template-columns: 1fr 1fr 1fr 2fr; }
+  @media (min-width: 1024px) { grid-template-columns: auto auto auto minmax(0, 1fr); }
 
   &.global-summary {
     background: transparent;
@@ -586,9 +588,19 @@ input:checked + .slider:before { transform: translateX(12px); }
 }
 .mini-map-grid {
   display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.mini-map-row {
+  display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 3px;
+}
+.mini-map-row .mini-map-season-marker {
+  justify-content: center;
+  min-width: 20px;
+  margin-inline: 0 3px;
 }
 .mini-map-dot {
   width: 7.5px;
@@ -1724,7 +1736,7 @@ export default function App() {
                   </div>
                   <div className="mini-map-grid">
                     {chronologicalSeasons.map((season, sIndex) => (
-                      <React.Fragment key={season.id}>
+                      <div className="mini-map-row" key={season.id}>
                         <div className="mini-map-season-marker">S{sIndex + 1}</div>
                         {season.sales.map((sale, i) => {
                           const isSale = sale.ticketsSold > 0;
@@ -1744,7 +1756,7 @@ export default function App() {
                             </div>
                           )
                         })}
-                      </React.Fragment>
+                      </div>
                     ))}
                   </div>
                   
