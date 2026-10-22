@@ -1735,29 +1735,44 @@ export default function App() {
                     </div>
                   </div>
                   <div className="mini-map-grid">
-                    {chronologicalSeasons.map((season, sIndex) => (
-                      <div className="mini-map-row" key={season.id}>
-                        <div className="mini-map-season-marker">S{sIndex + 1}</div>
-                        {season.sales.map((sale, i) => {
-                          const isSale = sale.ticketsSold > 0;
-                          const isPositive = sale.gainLoss >= 0;
-                          const dotColor = !isSale ? 'var(--color-text-dark)' : isPositive ? 'var(--color-success-primary)' : 'var(--color-danger-primary)';
+                    {chronologicalSeasons.map((season, sIndex) => {
+                      const renderDot = (sale) => {
+                        const isSale = sale.ticketsSold > 0;
+                        const isPositive = sale.gainLoss >= 0;
+                        const dotColor = !isSale ? 'var(--color-text-dark)' : isPositive ? 'var(--color-success-primary)' : 'var(--color-danger-primary)';
 
-                          return (
-                            <div
-                              key={season.id + '-' + i}
-                              className="mini-map-dot"
-                              style={{ '--dot-color': dotColor }}
-                              onMouseEnter={() => setHoveredSale({ seasonId: sale.seasonId, saleId: sale.saleId })}
-                              onMouseLeave={() => setHoveredSale(null)}
-                              onClick={() => scrollToRow(sale)}
-                            >
-                              <SaleTooltip sale={sale} hideDate={false} />
+                        return (
+                          <div
+                            key={season.id + '-' + sale.saleId}
+                            className="mini-map-dot"
+                            style={{ '--dot-color': dotColor }}
+                            onMouseEnter={() => setHoveredSale({ seasonId: sale.seasonId, saleId: sale.saleId })}
+                            onMouseLeave={() => setHoveredSale(null)}
+                            onClick={() => scrollToRow(sale)}
+                          >
+                            <SaleTooltip sale={sale} hideDate={false} />
+                          </div>
+                        );
+                      };
+                      // Playoff games get their own line under their season
+                      const regular = season.sales.filter(s => !isPlayoff(s.opponent));
+                      const playoffs = season.sales.filter(s => isPlayoff(s.opponent));
+
+                      return (
+                        <React.Fragment key={season.id}>
+                          <div className="mini-map-row">
+                            <div className="mini-map-season-marker">S{sIndex + 1}</div>
+                            {regular.map(renderDot)}
+                          </div>
+                          {playoffs.length > 0 && (
+                            <div className="mini-map-row is-playoffs">
+                              <div className="mini-map-season-marker" title={`Season ${sIndex + 1} playoffs`}>S{sIndex + 1}P</div>
+                              {playoffs.map(renderDot)}
                             </div>
-                          )
-                        })}
-                      </div>
-                    ))}
+                          )}
+                        </React.Fragment>
+                      );
+                    })}
                   </div>
                   
                   <div className="mini-map-legend">
