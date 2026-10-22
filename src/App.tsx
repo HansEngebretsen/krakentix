@@ -602,6 +602,8 @@ input:checked + .slider:before { transform: translateX(12px); }
   min-width: 20px;
   margin-inline: 0 3px;
 }
+/* playoffs nest under their season: indented one marker width */
+.mini-map-row.is-playoffs { padding-left: 23px; }
 .mini-map-dot {
   width: 7.5px;
   height: 7.5px;
@@ -1766,7 +1768,7 @@ export default function App() {
                           </div>
                           {playoffs.length > 0 && (
                             <div className="mini-map-row is-playoffs">
-                              <div className="mini-map-season-marker" title={`Season ${sIndex + 1} playoffs`}>S{sIndex + 1}P</div>
+                              <div className="mini-map-season-marker" title={`Season ${sIndex + 1} playoffs`}>P</div>
                               {playoffs.map(renderDot)}
                             </div>
                           )}
