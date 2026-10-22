@@ -259,7 +259,7 @@ input:checked + .slider:before { transform: translateX(12px); }
   .logo-container {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--space-2);
     cursor: pointer;
     transition: transform 0.2s;
@@ -338,23 +338,23 @@ input:checked + .slider:before { transform: translateX(12px); }
     min-width: 120px;
     width: auto;
   }
-  .header-right .search-input {
-    padding: 6px 30px 6px 12px;
-    font-size: 12px;
+  .header-right .search-container .search-input {
+    padding: 4px 26px 4px 10px;
+    font-size: 10.5px;
     font-weight: 400;
-    @media (min-width: 768px) { padding: 6px 30px 6px 12px; font-size: 12px; }
+    @media (min-width: 768px) { padding: 4px 26px 4px 10px; font-size: 10.5px; }
   }
-  .header-right .search-clear { right: 8px; }
+  .header-right .search-clear { right: 6px; }
   .search-kbd {
     position: absolute;
-    right: 8px;
+    right: 6px;
     top: 50%;
     transform: translateY(-50%);
-    min-width: 16px;
-    padding: 1px 4px;
+    min-width: 14px;
+    padding: 0 3px;
     border: 1px solid var(--color-border-base);
     border-radius: 4px;
-    font: 500 10px/1.3 var(--font-mono);
+    font: 500 9px/1.3 var(--font-mono);
     text-align: center;
     color: var(--color-text-dim);
     pointer-events: none;
