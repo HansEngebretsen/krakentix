@@ -322,6 +322,12 @@ input:checked + .slider:before { transform: translateX(12px); }
     .logo-container { flex: 0 0 100%; min-width: 0; }
     .header-right { flex: 0 0 100%; order: 2; }
     .top-bar .header-right .search-container { flex: 1 1 auto; }
+    /* mini-map: rows are 23 equal columns, so the dots run edge to edge */
+    .mini-map-row { display: grid; grid-template-columns: 18px repeat(var(--cols, 23), minmax(0, 1fr)); gap: 3px; align-items: center; }
+    .mini-map-row .mini-map-season-marker { margin: 0; min-width: 0; justify-content: center; }
+    .mini-map-dot { width: 7.5px; height: 7.5px; justify-self: center; }
+    .mini-map-row.is-playoffs { padding-left: 0; }
+    .mini-map-legend { justify-content: center; }
   }
   .header-right .search-container {
     flex: 0 1 240px;
@@ -1746,12 +1752,12 @@ export default function App() {
 
                       return (
                         <React.Fragment key={season.id}>
-                          <div className="mini-map-row">
+                          <div className="mini-map-row" style={{ '--cols': regular.length }}>
                             <div className="mini-map-season-marker">S{sIndex + 1}</div>
                             {regular.map(renderDot)}
                           </div>
                           {playoffs.length > 0 && (
-                            <div className="mini-map-row is-playoffs">
+                            <div className="mini-map-row is-playoffs" style={{ '--cols': regular.length }}>
                               <div className="mini-map-season-marker" title={`Season ${sIndex + 1} playoffs`}>P</div>
                               {playoffs.map(renderDot)}
                             </div>
