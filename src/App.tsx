@@ -1236,7 +1236,9 @@ const buildSeasonsData = () => {
     const sales = KNOWN_SALES[config.id] || [];
 
     // Dynamically infer game cost from the first fully known sale inside the array
-    const sampleSale = sales.find(s => s.cost > 0);
+    // Infer from a full 3-seat sale: a single-ticket row (e.g. 23-24's $93 preseason seat) would
+    // otherwise set every unsold game in the season to one seat's price
+    const sampleSale = sales.find(s => s.ticketsSold === 3 && s.cost > 0) || sales.find(s => s.cost > 0);
     const inferredGameCost = sampleSale ? sampleSale.cost : 279; // fallback if no sales exist
     const inferredTicketCost = inferredGameCost / 3;
 
