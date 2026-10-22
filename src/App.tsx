@@ -265,8 +265,8 @@ input:checked + .slider:before { transform: translateX(12px); }
   .main-logo-icon {
     display: block;
     flex: none;
-    width: 17px;
-    height: 21px;
+    width: 21px;
+    height: 26px;
     background: var(--color-text-dark);
     -webkit-mask: url("./assets/kraken-mono.svg") center / contain no-repeat;
     mask: url("./assets/kraken-mono.svg") center / contain no-repeat;

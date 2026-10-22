@@ -512,22 +512,6 @@ html[data-family] body .app-container :is(.summary-item .value, .ledger-table .k
 html[data-family="kraken"] body .app-container {
   /* header: logo halo, wordmark-weight title, quiet controls */
   .header-system { gap: clamp(20px, 4vw, 36px); }
-  .logo-container { position: relative; isolation: isolate; gap: 12px; }
-  .logo-container::before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    left: -18px;
-    top: 50%;
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: radial-gradient(circle, var(--k-glow) 0%, transparent 68%);
-    opacity: var(--k-glow-opacity);
-    transform: translateY(-50%);
-    animation: kt-breathe 6s ease-in-out infinite;
-    pointer-events: none;
-  }
   .header-title {
     font-family: var(--k-font-display);
     font-size: var(--k-title-size);
@@ -569,6 +553,23 @@ html[data-family="kraken"] body .app-container {
   .mini-map-legend { font-family: var(--k-font-ui); font-weight: 600; letter-spacing: 0.1em; border-top: 0; padding-top: 0; }
   .mini-map-season-marker { font-family: var(--k-font-ui); background: transparent; padding-inline: 2px; color: var(--k-muted); }
   .stat-badge { border-radius: var(--k-r-chip); }
+
+  /* attended-games grid: a soft brand glow behind the dots */
+  .summary-item.full-width-mobile {
+    position: relative;
+    isolation: isolate;
+  }
+  .summary-item.full-width-mobile::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -28px -36px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, var(--k-glow) 0%, transparent 100%);
+    opacity: var(--k-glow-opacity);
+    filter: blur(18px);
+    pointer-events: none;
+  }
 
   /* season: no card — the heading and whitespace carry the grouping */
   .season-group { gap: clamp(14px, 2.5vw, 24px); }
@@ -677,11 +678,6 @@ html[data-family="kraken"] body .app-container {
   .money-token .sign, .money-token .suffix { font-family: var(--k-font-ui); }
 }
 
-@keyframes kt-breathe {
-  0%, 100% { transform: translateY(-50%) scale(1); }
-  50% { transform: translateY(-50%) scale(1.12); }
-}
-
 /* --------------------------------------------------------------------------
    3b. Editorial family — hairlines, small radii, quiet surfaces
    -------------------------------------------------------------------------- */
@@ -775,20 +771,6 @@ html[data-family="editorial"] body .app-container {
    -------------------------------------------------------------------------- */
 
 html[data-family="score"] body .app-container {
-  .logo-container { position: relative; isolation: isolate; }
-  .logo-container::before {
-    content: "";
-    position: absolute;
-    inset: -12px auto -12px -24px;
-    width: 96px;
-    z-index: -1;
-    border-radius: 50%;
-    background: linear-gradient(45deg, var(--k-glow-a), var(--k-glow-b));
-    filter: blur(28px);
-    opacity: var(--k-glow-opacity);
-    animation: kt-pulse 4s ease-in-out infinite;
-    pointer-events: none;
-  }
   .header-title {
     font-family: var(--k-font-display);
     font-weight: 700;
@@ -911,10 +893,6 @@ html[data-family="score"] body .app-container {
   .money-token .sign, .money-token .suffix { font-family: var(--k-font-ui); }
 }
 
-@keyframes kt-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.08); }
-}
 
 /* --------------------------------------------------------------------------
    4. Per-design flourishes
@@ -977,8 +955,7 @@ html[data-design="k-tide"] body .app-container .ledger-table .kept-row .label-ba
 
 @media (prefers-reduced-motion: reduce) {
   html[data-design] body::before,
-  html[data-design] body::after,
-  html[data-design] .logo-container::before { animation: none !important; }
+  html[data-design] body::after { animation: none !important; }
 }
 
 /* --------------------------------------------------------------------------
