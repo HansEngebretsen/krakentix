@@ -4,11 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#dce5eb">
-  <title>hans kraken tickets</title>
+  <title>Kraken season ticket analyzer</title>
   <meta name="description" content="What hans paid for Seattle Kraken season tickets, season by season.">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="hans kraken tickets">
+  <meta property="og:title" content="Kraken season ticket analyzer">
   <meta property="og:description" content="What hans paid for Seattle Kraken season tickets, season by season.">
+  <meta property="og:url" content="https://haaans.com/krakentix/">
+  <meta property="og:image" content="https://haaans.com/krakentix/og.png">
+  <meta property="og:image:width" content="2400">
+  <meta property="og:image:height" content="1260">
+  <meta property="og:image:alt" content="Mini-map of every Kraken season-ticket game: attended, sold for more, sold for less">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://haaans.com/krakentix/og.png">
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,6 +31,8 @@
         var q = new URLSearchParams(location.search).get('design');
         var d = q || localStorage.getItem('kt-design') || 'bw-sharp';
         document.documentElement.dataset.design = d;
+        // ?og renders the link-preview card (mini-map only) for the og:image capture
+        if (new URLSearchParams(location.search).has('og')) document.documentElement.dataset.og = '1';
       } catch (e) {}
     })();
   </script>
