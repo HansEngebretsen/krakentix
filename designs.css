@@ -496,6 +496,13 @@ html[data-design]:not([data-design="original"]) body .app-container .row-highlig
   100% { background-color: transparent; }
 }
 
+/* Help dialog: a little wider than settings, bullets set in the body face */
+.help-content { max-width: 380px; }
+.help-lede { margin: 0 0 12px; font-size: 12px; line-height: 1.5; color: var(--color-text-base); }
+.help-list { margin: 0 0 16px; padding-left: 16px; font-size: 12px; line-height: 1.7; color: var(--color-text-base); }
+.help-list strong { color: var(--color-text-dark); font-weight: 700; }
+hans-footer:not(:defined) { display: block; min-height: 76px; }
+
 /* 02 · Original · Glow — same palette, plus the glow behind the dots (see flourishes) */
 
 /* 03 · Original · Sharp — tighter corners, small chips */

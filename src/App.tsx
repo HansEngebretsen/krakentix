@@ -252,8 +252,6 @@ input:checked + .slider:before { transform: translateX(12px); }
     flex-direction: row;
     align-items: center;
     gap: var(--space-2);
-    cursor: pointer;
-    &:hover { opacity: 0.8; }
   }
 
   .main-logo-icon {
@@ -1533,6 +1531,17 @@ export default function App() {
   // B&W Sharp opens dark; the design is already applied before React mounts
   const [isDarkMode, setIsDarkMode] = useState(() => document.documentElement.dataset.design === 'bw-sharp');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
+
+  // Deterministic counts behind the ? dialog, straight from the season data
+  const helpStats = useMemo(() => ({
+    seasons: seasonsData.length,
+    games: seasonsData.reduce((a, s) => a + s.metrics.totalGamesInPackage, 0),
+    bought: seasonsData.reduce((a, s) => a + s.metrics.totalSold + s.metrics.totalKept, 0),
+    sold: seasonsData.reduce((a, s) => a + s.metrics.totalSold, 0),
+    kept: seasonsData.reduce((a, s) => a + s.metrics.totalKept, 0),
+    attended: seasonsData.reduce((a, s) => a + s.metrics.gamesAttended, 0),
+  }), [seasonsData]);
   const [hideAttended, setHideAttended] = useState(true);
   const [hoveredSale, setHoveredSale] = useState(null);
   const [highlightedRow, setHighlightedRow] = useState(null);
@@ -1661,10 +1670,31 @@ export default function App() {
         </div>
       </div>
 
+      {/* Help dialog */}
+      <div className={`modal-overlay ${isHelpOpen ? 'open' : ''}`} onClick={() => setIsHelpOpen(false)}>
+        <div className="modal-content help-content" onClick={e => e.stopPropagation()}>
+          <div className="modal-header">
+            <h3 className="modal-title">What this covers</h3>
+            <button className="modal-close" onClick={() => setIsHelpOpen(false)}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <p className="help-lede">Every number is my season-ticket package, one row per game, matched to the official schedule. Playoff games are not counted.</p>
+          <ul className="help-list">
+            <li><strong>{helpStats.seasons}</strong> seasons, 2021–2026</li>
+            <li><strong>{helpStats.games}</strong> package games, 3 seats each</li>
+            <li><strong>{helpStats.bought}</strong> tickets held: <strong>{helpStats.sold}</strong> resold, <strong>{helpStats.kept}</strong> used</li>
+            <li><strong>{helpStats.attended}</strong> games attended in person</li>
+            <li>Gain or loss = resale price minus the seat's cost</li>
+          </ul>
+          <hans-footer></hans-footer>
+        </div>
+      </div>
+
       <div className="dashboard-layout">
         <header className="header-system">
           <div className="top-bar">
-            <div className="logo-container" onClick={() => { setSearchTerm(''); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+            <div className="logo-container">
               <span className="main-logo-icon" role="img" aria-label="Kraken" />
               <div className="header-text">
                 <h2 className="header-title">Kraken season ticket analyzer | Hans</h2>
@@ -1684,6 +1714,9 @@ export default function App() {
             </div>
           
             <div className="header-actions">
+              <button className="icon-btn" onClick={() => setIsHelpOpen(true)} title="What this covers" aria-label="What this covers">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </button>
               <button className="icon-btn" onClick={() => setIsSettingsOpen(true)} title="Settings">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                   <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
@@ -1905,6 +1938,7 @@ export default function App() {
           ))}
         </main>
       </div>
+      <hans-footer></hans-footer>
     </div>
   );
 }
