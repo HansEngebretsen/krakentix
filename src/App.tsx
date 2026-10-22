@@ -525,7 +525,7 @@ input:checked + .slider:before { transform: translateX(12px); }
 }
 .mini-map-header .attended-stat {
   font-family: var(--font-mono);
-  font-size: var(--text-xs);
+  font-size: 8.5px;
   color: var(--color-text-dim);
   font-weight: 700;
   text-transform: uppercase;
@@ -533,7 +533,7 @@ input:checked + .slider:before { transform: translateX(12px); }
 }
 .mini-map-sub-stat {
   font-family: var(--font-mono);
-  font-size: 6.75px;
+  font-size: 8.5px;
   color: var(--color-text-dim);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -548,7 +548,7 @@ input:checked + .slider:before { transform: translateX(12px); }
   padding-top: var(--space-4);
   border-top: 1px solid var(--color-border-subtle);
   font-family: var(--font-mono);
-  font-size: 6.75px;
+  font-size: 8.5px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--color-text-dim);
@@ -571,7 +571,7 @@ input:checked + .slider:before { transform: translateX(12px); }
   display: inline-flex;
   align-items: center;
   font-family: var(--font-mono);
-  font-size: 6.75px;
+  font-size: 8.5px;
   font-weight: 800;
   padding: 1.5px 4.5px;
   background: var(--color-surface);

@@ -377,10 +377,6 @@ html[data-design="bw-sharp"]:has(.dark-mode) {
   --k-neg-text: #efc0c3;
 }
 /* Sharp: mini-map guide text a step up so it reads at a glance */
-html[data-design="bw-sharp"] body .app-container .mini-map-header .attended-stat { font-size: 10px; }
-html[data-design="bw-sharp"] body .app-container .mini-map-sub-stat { font-size: 8.5px; }
-html[data-design="bw-sharp"] body .app-container .mini-map-legend { font-size: 9px; }
-html[data-design="bw-sharp"] body .app-container .mini-map-season-marker { font-size: 8.5px; }
 html[data-design="bw-sharp"] body .app-container .section-title {
   text-transform: uppercase;
   letter-spacing: 0.06em;
