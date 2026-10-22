@@ -232,8 +232,8 @@ input:checked + .slider:before { transform: translateX(12px); }
 .header-system {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-  @media (min-width: 768px) { gap: var(--space-6); }
+  gap: var(--space-6);
+  @media (min-width: 768px) { gap: var(--space-8); }
 
   .top-bar {
     display: flex;
@@ -1524,7 +1524,8 @@ const SeasonLedger = ({ metrics }) => {
 export default function App() {
   const seasonsData = useMemo(() => buildSeasonsData(), []);
   const [searchTerm, setSearchTerm] = useState('');
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  // B&W Sharp opens dark; the design is already applied before React mounts
+  const [isDarkMode, setIsDarkMode] = useState(() => document.documentElement.dataset.design === 'bw-sharp');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [hideAttended, setHideAttended] = useState(true);
   const [hoveredSale, setHoveredSale] = useState(null);

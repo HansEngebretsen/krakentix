@@ -326,6 +326,10 @@ html[data-design^="bw-"]:has(.dark-mode) {
 }
 
 /* B&W · Sharp — hard edges, uppercase section heads */
+/* Sharp: softer card outlines; dark outlines lean a touch more blue */
+html[data-design="bw-sharp"] body .app-container .season-card { border-color: #d3dfe4; }
+html[data-design="bw-sharp"]:has(.dark-mode) body .app-container .season-card { border-color: #1b3646; }
+
 /* Sharp: a barely-there ice cast in the blacks and whites, and cleaner
    (less muddy) green / red that still read as a tint, not a highlight */
 html[data-design="bw-sharp"] {
