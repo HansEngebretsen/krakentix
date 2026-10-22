@@ -301,6 +301,8 @@ html[data-design]:not([data-design="original"]) body .app-container .row-highlig
 .help-content { max-width: 380px; }
 .help-lede { margin: 0 0 12px; font-size: 12px; line-height: 1.5; color: var(--color-text-base); }
 .help-list { margin: 0 0 16px; padding-left: 16px; font-size: 12px; line-height: 1.7; color: var(--color-text-base); }
+.help-list li { margin-bottom: 10px; }
+.help-list li:last-child { margin-bottom: 0; }
 .help-list strong { color: var(--color-text-dark); font-weight: 700; }
 hans-footer:not(:defined) { display: block; min-height: 76px; }
 
