@@ -267,7 +267,9 @@ input:checked + .slider:before { transform: translateX(12px); }
     flex: none;
     width: 22px;
     height: 22px;
-    color: var(--color-text-dark);
+    background: var(--color-text-dark);
+    -webkit-mask: url("./assets/logo.svg") center / contain no-repeat;
+    mask: url("./assets/logo.svg") center / contain no-repeat;
   }
 
   .header-title {
@@ -1603,7 +1605,7 @@ export default function App() {
         <header className="header-system">
           <div className="top-bar">
             <div className="logo-container" onClick={() => { setSearchTerm(''); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-              <svg className="main-logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/></svg>
+              <span className="main-logo-icon" role="img" aria-label="Kraken" />
               <div className="header-text">
                 <h2 className="header-title">Kraken season ticket analyzer | Hans</h2>
                 <p className="header-subtitle">Cost analyzer for Kraken season tickets paid and sold by Hans 2021–2026</p>

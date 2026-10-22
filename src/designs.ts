@@ -19,6 +19,10 @@ export const DESIGNS: Design[] = [
   { slug: 'o-ink', name: 'Original · Ink', note: 'Kraken navy ink and ice, same containers' },
   { slug: 'o-airy', name: 'Original · Airy', note: 'Bigger type, more room, rounder cards' },
   { slug: 'o-night', name: 'Original · Night', note: 'Original light; deep Kraken navy in dark mode, with the glow' },
+  { slug: 'm-plex', name: 'Mono · Plex', note: 'IBM Plex Mono throughout, 4px corners' },
+  { slug: 'm-jet', name: 'Mono · Jet', note: 'JetBrains Mono throughout, rounder 12px cards' },
+  { slug: 'm-space', name: 'Mono · Space', note: 'Space Mono labels, Inter numerals, pill chips' },
+  { slug: 'm-bw', name: 'Black & White', note: 'Pure grayscale, hard edges, solid black badges' },
   { slug: 'mono-ledger', name: 'Mono Ledger', note: 'Say-style hairlines, Inter, quiet monochrome', family: 'editorial' },
 ];
 
