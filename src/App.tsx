@@ -1777,8 +1777,8 @@ export default function App() {
             <div className="logo-container">
               <span className="main-logo-icon" role="img" aria-label="Kraken" />
               <div className="header-text">
-                <h2 className="header-title">Kraken season ticket analyzer | Hans</h2>
-                <p className="header-subtitle">Data from the first 5 seasons of season tickets I held 2021–2026 for the Seattle Kraken</p>
+                <h2 className="header-title">Kraken season ticket analyzer</h2>
+                <p className="header-subtitle">Hans' data from the first 5 seasons of season tickets, 2021–2026</p>
               </div>
             </div>
             
