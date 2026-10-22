@@ -2,7 +2,8 @@
 //   node build.mjs          → writes a static site to dist/
 //   node build.mjs --serve  → serves the repo root on $PORT (default 3000), rebuilding app.js in memory
 import * as esbuild from 'esbuild';
-import { cpSync, mkdirSync, rmSync } from 'node:fs';
+import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 
 const serve = process.argv.includes('--serve');
 const STATIC_FILES = ['index.html', 'designs.css', 'favicon.svg', 'og.png', 'assets'];
@@ -29,4 +30,11 @@ if (serve) {
   mkdirSync('dist');
   await esbuild.build({ ...options, outfile: 'dist/app.js' });
   for (const f of STATIC_FILES) cpSync(f, `dist/${f}`, { recursive: true });
+
+  // Cache-bust: the CDN caches for hours, so point index.html at content-hashed URLs
+  const hash = (f) => createHash('sha1').update(readFileSync(`dist/${f}`)).digest('hex').slice(0, 10);
+  const html = readFileSync('dist/index.html', 'utf8')
+    .replace('./app.js"', `./app.js?v=${hash('app.js')}"`)
+    .replace('./designs.css"', `./designs.css?v=${hash('designs.css')}"`);
+  writeFileSync('dist/index.html', html);
 }
