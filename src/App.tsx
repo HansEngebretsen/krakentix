@@ -1748,7 +1748,7 @@ export default function App() {
       <div className={`modal-overlay ${isHelpOpen ? 'open' : ''}`} onClick={() => setIsHelpOpen(false)}>
         <div className="modal-content help-content" onClick={e => e.stopPropagation()}>
           <div className="modal-header">
-            <h3 className="modal-title">What this covers</h3>
+            <h3 className="modal-title">About</h3>
             <button className="modal-close" onClick={() => setIsHelpOpen(false)}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
@@ -1789,7 +1789,7 @@ export default function App() {
             </div>
           
             <div className="header-actions">
-              <button className="icon-btn" onClick={() => setIsHelpOpen(true)} title="What this covers" aria-label="What this covers">
+              <button className="icon-btn" onClick={() => setIsHelpOpen(true)} title="About" aria-label="About">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
               </button>
               <button className="icon-btn" onClick={() => setIsSettingsOpen(true)} title="Settings">
