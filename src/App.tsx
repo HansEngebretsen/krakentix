@@ -334,14 +334,30 @@ input:checked + .slider:before { transform: translateX(12px); }
     .header-right { flex: 0 0 100%; order: 2; }
   }
   .header-right .search-container {
-    flex: 0 1 340px;
+    flex: 0 1 240px;
     min-width: 120px;
     width: auto;
   }
   .header-right .search-input {
-    padding: var(--space-3) var(--space-4);
-    font-size: var(--text-base);
-    @media (min-width: 768px) { padding: var(--space-3) var(--space-4); font-size: var(--text-base); }
+    padding: 6px 30px 6px 12px;
+    font-size: 12px;
+    font-weight: 400;
+    @media (min-width: 768px) { padding: 6px 30px 6px 12px; font-size: 12px; }
+  }
+  .header-right .search-clear { right: 8px; }
+  .search-kbd {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    min-width: 16px;
+    padding: 1px 4px;
+    border: 1px solid var(--color-border-base);
+    border-radius: 4px;
+    font: 500 10px/1.3 var(--font-mono);
+    text-align: center;
+    color: var(--color-text-dim);
+    pointer-events: none;
   }
   .search-container {
     position: relative;
@@ -1519,6 +1535,19 @@ export default function App() {
   const [sortConfigs, setSortConfigs] = useState({ "25-26": { key: 'date', direction: 'asc' }, "24-25": { key: 'date', direction: 'asc' }, "23-24": { key: 'date', direction: 'asc' }, "22-23": { key: 'date', direction: 'asc' }, "21-22": { key: 'date', direction: 'asc' }, "search": { key: 'date', direction: 'asc' } });
   const filterInputRef = useRef(null);
 
+  // "/" focuses search from anywhere, unless you're already typing in a field
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return;
+      const t = e.target;
+      if (t instanceof HTMLInputElement || t instanceof HTMLTextAreaElement || t.isContentEditable) return;
+      e.preventDefault();
+      filterInputRef.current?.focus();
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, []);
+
   useEffect(() => {
     if (isDarkMode) document.body.style.backgroundColor = '#4e537d';
     else document.body.style.backgroundColor = '#dce5eb';
@@ -1641,7 +1670,8 @@ export default function App() {
             
             <div className="header-right">
             <div className="search-container">
-              <input ref={filterInputRef} type="text" placeholder="(/) to search globally by opponent, date or amount" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="search-input" />
+              <input ref={filterInputRef} type="text" placeholder="Canucks, 2025-12, 77" aria-label="Search by opponent, date or amount (press / to focus)" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="search-input" />
+              {!searchTerm && <kbd className="search-kbd" aria-hidden="true">/</kbd>}
               {searchTerm && (
                 <button onClick={() => setSearchTerm('')} className="search-clear">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
