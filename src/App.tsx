@@ -320,6 +320,29 @@ input:checked + .slider:before { transform: translateX(12px); }
     &:hover { opacity: 0.7; transform: scale(1.1); background: var(--color-border-subtle); }
   }
 
+  .header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-3);
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  @media (max-width: 767px) {
+    .top-bar { flex-wrap: wrap; row-gap: var(--space-4); }
+    .logo-container { flex: 0 0 100%; min-width: 0; }
+    .header-right { flex: 0 0 100%; order: 2; }
+  }
+  .header-right .search-container {
+    flex: 0 1 340px;
+    min-width: 120px;
+    width: auto;
+  }
+  .header-right .search-input {
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--text-base);
+    @media (min-width: 768px) { padding: var(--space-3) var(--space-4); font-size: var(--text-base); }
+  }
   .search-container {
     position: relative;
     width: 100%;
@@ -1616,6 +1639,16 @@ export default function App() {
               </div>
             </div>
             
+            <div className="header-right">
+            <div className="search-container">
+              <input ref={filterInputRef} type="text" placeholder="(/) to search globally by opponent, date or amount" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="search-input" />
+              {searchTerm && (
+                <button onClick={() => setSearchTerm('')} className="search-clear">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+              )}
+            </div>
+          
             <div className="header-actions">
               <button className="icon-btn" onClick={() => setIsSettingsOpen(true)} title="Settings">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
@@ -1631,15 +1664,7 @@ export default function App() {
                 )}
               </button>
             </div>
-          </div>
-          
-          <div className="search-container">
-            <input ref={filterInputRef} type="text" placeholder="(/) to search globally by opponent, date or amount" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="search-input" />
-            {searchTerm && (
-              <button onClick={() => setSearchTerm('')} className="search-clear">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-              </button>
-            )}
+            </div>
           </div>
           
           {!searchTerm && (

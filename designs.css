@@ -288,7 +288,7 @@ html[data-design^="bw-"] {
   --k-muted: #5c5c5c;
   --k-accent: #000000;
   --k-accent-soft: #efefef;
-  --k-glow: #d6d6d6;
+  --k-glow: #c9c9c9;
   --k-glow-opacity: 0.6;
   --k-pos: #4f8a68;
   --k-pos-bg: #edf5ef;
@@ -316,7 +316,7 @@ html[data-design^="bw-"]:has(.dark-mode) {
   --k-muted: #9a9a9a;
   --k-accent: #ffffff;
   --k-accent-soft: #1c1c1c;
-  --k-glow: #3a3a3a;
+  --k-glow: #2e2e2e;
   --k-pos: #7fb797;
   --k-pos-bg: #0f1a14;
   --k-pos-text: #b9dcc6;
@@ -383,6 +383,36 @@ html[data-design="bw-serif"] body .app-container .summary-item .value,
 html[data-design="bw-serif"] body .app-container .ledger-table .kept-row td:not(:first-child) {
   font-family: var(--k-font-num);
 }
+
+/* B&W header glow — a soft gray bloom behind the top bar */
+html[data-design^="bw-"] body .app-container .top-bar { isolation: isolate; }
+html[data-design^="bw-"] body .app-container .top-bar::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  right: 0;
+  top: -20px;
+  height: 180px;
+  background:
+    radial-gradient(40% 70% at 12% 45%, var(--k-glow) 0%, transparent 70%),
+    radial-gradient(35% 70% at 88% 45%, var(--k-glow) 0%, transparent 70%);
+  opacity: 1;
+  filter: blur(14px);
+  pointer-events: none;
+}
+
+/* Table lines — B&W and mono: hairlines connect the ledger rows and the sales rows */
+html:is([data-design^="bw-"], [data-design^="m-"]) body .app-container .ledger-table { border-spacing: 0; }
+html:is([data-design^="bw-"], [data-design^="m-"]) body .app-container .ledger-table tbody td { border-bottom: 1px solid var(--k-border-subtle); padding-block: 12px; }
+html:is([data-design^="bw-"], [data-design^="m-"]) body .app-container .ledger-table tbody tr:last-child td { border-bottom: 0; }
+html:is([data-design^="bw-"], [data-design^="m-"]) body .app-container .ledger-table .divider-row { display: none; }
+/* drop the boxes around KEPT / SOLD / PAID — the lines carry the connection */
+html:is([data-design^="bw-"], [data-design^="m-"]) body .app-container .ledger-table .label-badge { background: transparent !important; border: 0 !important; box-shadow: none; padding-inline: 0; color: var(--k-muted) !important; }
+html:is([data-design^="bw-"], [data-design^="m-"]) body .app-container .ledger-table .kept-row .label-badge { color: var(--k-text) !important; font-weight: 800; }
+html:is([data-design^="bw-"], [data-design^="m-"]) body .app-container .sales-table-wrapper tbody tr { border-bottom: 0; }
+html:is([data-design^="bw-"], [data-design^="m-"]) body .app-container .sales-table-wrapper tbody td { border-bottom: 1px solid var(--k-border-subtle); }
+html:is([data-design^="bw-"], [data-design^="m-"]) body .app-container .sales-table-wrapper tbody tr:last-child td { border-bottom: 0; }
 
 /* 02 · Original · Glow — same palette, plus the glow behind the dots (see flourishes) */
 
