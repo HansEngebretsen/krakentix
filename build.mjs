@@ -5,7 +5,7 @@ import * as esbuild from 'esbuild';
 import { cpSync, mkdirSync, rmSync } from 'node:fs';
 
 const serve = process.argv.includes('--serve');
-const STATIC_FILES = ['index.html', 'designs.css', 'favicon.png', 'assets'];
+const STATIC_FILES = ['index.html', 'designs.css', 'favicon.svg', 'assets'];
 
 const options = {
   entryPoints: ['src/main.tsx'],
