@@ -2,9 +2,8 @@
 // Each design is pure CSS keyed off <html data-design="…">; nothing here
 // touches app data or interactions.
 //
-// The theme button in the header cycles designs through setDesign(). Locally
-// (or with ?designs in the URL) a HUD also flips them with ←/→;
-// ?design=<slug> picks one anywhere. The choice is remembered in localStorage.
+// The header theme button cycles designs through setDesign().
+// ?design=<slug> picks one from the URL. The choice is remembered in localStorage.
 
 export type Design = {
   slug: string;
@@ -36,7 +35,6 @@ function indexOfSlug(slug: string | null | undefined) {
 }
 
 let current = 0;
-let onChange: (() => void) | null = null;
 
 function apply(design: Design) {
   document.documentElement.dataset.design = design.slug;
@@ -58,69 +56,11 @@ export function setDesign(slug: string) {
     url.searchParams.set('design', d.slug);
     history.replaceState(null, '', url);
   }
-  onChange?.();
 }
 
+// The switcher HUD and arrow keys are gone; the header theme button is the only control.
 export function initDesignSwitcher() {
   const params = new URLSearchParams(location.search);
-  const local = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || location.hostname.endsWith('.local');
-  const showHud = local || params.has('designs');
-
   current = indexOfSlug(params.get('design') || store.get());
   apply(DESIGNS[current]);
-  if (!showHud) return;
-
-  const hud = document.createElement('div');
-  hud.className = 'kt-hud';
-  hud.innerHTML = `
-    <button class="kt-hud-btn" data-step="-1" aria-label="Previous design">‹</button>
-    <div class="kt-hud-body">
-      <div class="kt-hud-top"><span class="kt-hud-count"></span><span class="kt-hud-name"></span></div>
-      <div class="kt-hud-note"></div>
-    </div>
-    <button class="kt-hud-btn" data-step="1" aria-label="Next design">›</button>`;
-  document.body.appendChild(hud);
-
-  const count = hud.querySelector('.kt-hud-count') as HTMLElement;
-  const name = hud.querySelector('.kt-hud-name') as HTMLElement;
-  const note = hud.querySelector('.kt-hud-note') as HTMLElement;
-  let idleTimer = 0;
-
-  const render = () => {
-    const d = DESIGNS[current];
-    count.textContent = `${current + 1} / ${DESIGNS.length}`;
-    name.textContent = d.name;
-    note.textContent = d.note;
-    hud.classList.add('is-active');
-    clearTimeout(idleTimer);
-    idleTimer = window.setTimeout(() => hud.classList.remove('is-active'), 2200);
-  };
-  onChange = render;
-
-  const go = (step: number) => {
-    const next = DESIGNS[(current + step + DESIGNS.length) % DESIGNS.length];
-    const url = new URL(location.href);
-    url.searchParams.set('design', next.slug);
-    history.replaceState(null, '', url);
-    setDesign(next.slug);
-  };
-
-  hud.addEventListener('click', e => {
-    const btn = (e.target as HTMLElement).closest('[data-step]') as HTMLElement | null;
-    if (btn) go(Number(btn.dataset.step));
-  });
-
-  document.addEventListener('keydown', e => {
-    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-    if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return;
-    const t = e.target as HTMLElement;
-    const typing = t instanceof HTMLInputElement || t instanceof HTMLTextAreaElement || t.isContentEditable;
-    // Arrows belong to the caret while there is text to move through.
-    if (typing && (t as HTMLInputElement).value) return;
-    if (typing) t.blur();
-    e.preventDefault();
-    go(e.key === 'ArrowRight' ? 1 : -1);
-  });
-
-  render();
 }
