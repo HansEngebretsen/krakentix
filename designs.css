@@ -4,25 +4,21 @@
    order, data or interaction; it re-points the app's --color-* tokens and
    restyles surfaces, type and shape.
 
-   1. Tokens       one block per design (light, then dark via :has(.dark-mode))
+   1. Tokens       the --k-* set per design (light, then dark via :has(.dark-mode))
+                   · Original family: the app's own palette, containers, hierarchy
+                   · Mono Ledger: hairline monochrome
    2. Bridge       maps --k-* tokens onto the app's --color-* tokens
-   3. Families     "kraken"    open layout, type-led hierarchy, brand glow
-                   "editorial" hairline monochrome (Mono Ledger)
-                   "score"     rounded glass (Deep Sea)
+   3. Families     "editorial" hairline layout (Mono Ledger)
    4. Per-design   small flourishes
    5. HUD          the ←/→ switcher pill (local only)
 
-   Rules from the design doc that every skin keeps: tabular numerals,
-   superscript $, tight number tracking, green/red only for money.
-
-   Kraken brand: Deep Sea #001628 · Boundless #355464 · Shadow #68A2B9 ·
-   Ice #99D9D9 · Red Alert #E9072B
+   Rules every skin keeps: tabular numerals, superscript $, tight number
+   tracking, green/red only for money.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
    1. Tokens
    -------------------------------------------------------------------------- */
-
 html[data-design] {
   --k-font-quick: "Quicksand", ui-rounded, system-ui, sans-serif;
   --k-font-jb: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -43,327 +39,6 @@ html[data-design] {
   --k-glow-opacity: 0.4;
   --k-num-glow: none;
 }
-
-/* Kraken family defaults: open layout, so wells/borders collapse to tints */
-html[data-family="kraken"] {
-  --k-bg: var(--k-fill);
-  --k-card: transparent;
-  --k-surface-muted: transparent;
-  --k-border: var(--k-faint);
-  --k-border-subtle: var(--k-faint);
-  --k-accent-soft: var(--k-fill);
-  --k-track: var(--k-fill-strong);
-  --k-hero-weight: 600;
-  --k-title-size: 11px;
-  --k-title-weight: 700;
-  --k-title-tracking: 0.02em;
-  --k-title-case: uppercase;
-  --k-section-size: clamp(22px, 4vw, 28px);
-  --k-section-weight: 600;
-  --k-section-tracking: -0.02em;
-  --k-section-case: none;
-  --k-mark-w: 7px;
-  --k-mark-h: 7px;
-  --k-mark-r: 50%;
-  --k-row-line: transparent;
-}
-
-/* 02 · Kraken · Ice — Mono Ledger restraint, ice-blue halo, 4px corners */
-html[data-design="k-ice"] {
-  --k-page: radial-gradient(900px 380px at 0% 0%, rgba(153, 217, 217, 0.38), transparent 70%), #f7fafb;
-  --k-text: #001628;
-  --k-text-2: #2c4656;
-  --k-muted: #6a8494;
-  --k-faint: rgba(0, 22, 40, 0.09);
-  --k-fill: rgba(0, 22, 40, 0.04);
-  --k-fill-strong: rgba(0, 22, 40, 0.07);
-  --k-surface: #ffffff;
-  --k-accent: #001628;
-  --k-on-accent: #ffffff;
-  --k-ink: #f7fafb;
-  --k-glow: #99d9d9;
-  --k-glow-opacity: 0.9;
-  --k-mark: #68a2b9;
-  --k-pos: #0b8a5f;  --k-pos-bg: rgba(11, 138, 95, 0.12);  --k-pos-text: #076b49;
-  --k-neg: #c8102e;  --k-neg-bg: rgba(200, 16, 46, 0.1);   --k-neg-text: #a10d25;
-  --k-r-chip: 4px;
-  --k-r-field: 6px;
-  --k-r-bar: 2px;
-  --k-r-card: 8px;
-  --k-row-line: var(--k-faint);
-}
-html[data-design="k-ice"]:has(.dark-mode) {
-  --k-page: radial-gradient(900px 380px at 0% 0%, rgba(153, 217, 217, 0.13), transparent 70%), #001628;
-  --k-text: #eaf6f7;
-  --k-text-2: #b9d0d8;
-  --k-muted: #7393a3;
-  --k-faint: rgba(153, 217, 217, 0.12);
-  --k-fill: rgba(153, 217, 217, 0.06);
-  --k-fill-strong: rgba(153, 217, 217, 0.12);
-  --k-surface: #0a2236;
-  --k-accent: #99d9d9;
-  --k-on-accent: #001628;
-  --k-ink: #001628;
-  --k-glow-opacity: 0.45;
-  --k-mark: #99d9d9;
-  --k-pos: #4fd1a5;  --k-pos-bg: rgba(79, 209, 165, 0.14);  --k-pos-text: #93e8c9;
-  --k-neg: #ff5a6e;  --k-neg-bg: rgba(255, 90, 110, 0.15);  --k-neg-text: #ffa3ae;
-}
-
-/* 03 · Kraken · Red Alert — sharp 0px corners, condensed caps, one red mark */
-html[data-design="k-red"] {
-  --k-font-display: var(--k-font-condensed);
-  --k-font-hero: var(--k-font-condensed);
-  --k-page: #f6f7f8;
-  --k-text: #0b1620;
-  --k-text-2: #2b3945;
-  --k-muted: #6b7884;
-  --k-faint: rgba(11, 22, 32, 0.1);
-  --k-fill: rgba(11, 22, 32, 0.045);
-  --k-fill-strong: rgba(11, 22, 32, 0.08);
-  --k-surface: #ffffff;
-  --k-accent: #0b1620;
-  --k-on-accent: #ffffff;
-  --k-ink: #f6f7f8;
-  --k-glow: #e9072b;
-  --k-glow-opacity: 0.22;
-  --k-mark: #e9072b;
-  --k-pos: #0f8a5a;  --k-pos-bg: rgba(15, 138, 90, 0.12);  --k-pos-text: #0a6b45;
-  --k-neg: #c8102e;  --k-neg-bg: rgba(200, 16, 46, 0.1);   --k-neg-text: #a10d25;
-  --k-r-chip: 0;
-  --k-r-field: 0;
-  --k-r-bar: 0;
-  --k-r-card: 0;
-  --k-title-size: 13px;
-  --k-title-tracking: 0.12em;
-  --k-title-case: uppercase;
-  --k-section-size: clamp(30px, 5vw, 40px);
-  --k-section-weight: 700;
-  --k-section-tracking: 0.02em;
-  --k-section-case: uppercase;
-  --k-hero-weight: 600;
-  --k-mark-w: 18px;
-  --k-mark-h: 3px;
-  --k-mark-r: 0;
-}
-html[data-design="k-red"]:has(.dark-mode) {
-  --k-page: #0a0e12;
-  --k-text: #f2f4f6;
-  --k-text-2: #c4cbd2;
-  --k-muted: #7c8792;
-  --k-faint: rgba(255, 255, 255, 0.09);
-  --k-fill: rgba(255, 255, 255, 0.045);
-  --k-fill-strong: rgba(255, 255, 255, 0.09);
-  --k-surface: #12181e;
-  --k-accent: #f2f4f6;
-  --k-on-accent: #0a0e12;
-  --k-ink: #0a0e12;
-  --k-glow-opacity: 0.4;
-  --k-mark: #ff2a45;
-  --k-pos: #3ed598;  --k-pos-bg: rgba(62, 213, 152, 0.14);  --k-pos-text: #8debc4;
-  --k-neg: #ff5a6e;  --k-neg-bg: rgba(255, 90, 110, 0.15);  --k-neg-text: #ffa3ae;
-}
-
-/* 04 · Kraken · Tide — everything pill-round, boundless blue, soft glow */
-html[data-design="k-tide"] {
-  --k-font-ui: var(--k-font-outfit);
-  --k-font-display: var(--k-font-outfit);
-  --k-page: linear-gradient(180deg, #e3f1f4 0px, #f6fafb 460px);
-  --k-text: #0f2a37;
-  --k-text-2: #355464;
-  --k-muted: #6d8b99;
-  --k-faint: rgba(53, 84, 100, 0.12);
-  --k-fill: rgba(53, 84, 100, 0.07);
-  --k-fill-strong: rgba(53, 84, 100, 0.12);
-  --k-surface: #ffffff;
-  --k-accent: #355464;
-  --k-on-accent: #ffffff;
-  --k-ink: #f6fafb;
-  --k-glow: #68a2b9;
-  --k-glow-opacity: 0.55;
-  --k-mark: #68a2b9;
-  --k-pos: #12a37a;  --k-pos-bg: rgba(18, 163, 122, 0.13);  --k-pos-text: #0b7a5a;
-  --k-neg: #e0324c;  --k-neg-bg: rgba(224, 50, 76, 0.11);   --k-neg-text: #b31f37;
-  --k-r-chip: 999px;
-  --k-r-field: 999px;
-  --k-r-bar: 999px;
-  --k-r-card: 22px;
-  --k-title-size: 12px;
-  --k-title-weight: 600;
-  --k-section-size: clamp(24px, 4.4vw, 32px);
-  --k-mark-w: 9px;
-  --k-mark-h: 9px;
-}
-html[data-design="k-tide"]:has(.dark-mode) {
-  --k-page: linear-gradient(180deg, #16323f 0px, #0d1f28 460px);
-  --k-text: #e6f3f5;
-  --k-text-2: #b5ced6;
-  --k-muted: #7e9ca8;
-  --k-faint: rgba(153, 217, 217, 0.12);
-  --k-fill: rgba(153, 217, 217, 0.08);
-  --k-fill-strong: rgba(153, 217, 217, 0.14);
-  --k-surface: #163240;
-  --k-accent: #99d9d9;
-  --k-on-accent: #0d1f28;
-  --k-ink: #0d1f28;
-  --k-glow-opacity: 0.5;
-  --k-mark: #99d9d9;
-  --k-pos: #4fd1a5;  --k-pos-bg: rgba(79, 209, 165, 0.15);  --k-pos-text: #93e8c9;
-  --k-neg: #ff6b7e;  --k-neg-bg: rgba(255, 107, 126, 0.15); --k-neg-text: #ffadb7;
-}
-
-/* 05 · Kraken · Fin — asymmetric fin-cut corners, shadow blue */
-html[data-design="k-fin"] {
-  --k-font-ui: var(--k-font-grotesk);
-  --k-font-display: var(--k-font-grotesk);
-  --k-page: #f3f6f7;
-  --k-text: #0c1d27;
-  --k-text-2: #2e4654;
-  --k-muted: #6d8290;
-  --k-faint: rgba(12, 29, 39, 0.1);
-  --k-fill: rgba(104, 162, 185, 0.12);
-  --k-fill-strong: rgba(104, 162, 185, 0.22);
-  --k-surface: #ffffff;
-  --k-accent: #68a2b9;
-  --k-on-accent: #0c1d27;
-  --k-ink: #f3f6f7;
-  --k-glow: #68a2b9;
-  --k-glow-opacity: 0.5;
-  --k-mark: #68a2b9;
-  --k-pos: #0e8f62;  --k-pos-bg: rgba(14, 143, 98, 0.12);  --k-pos-text: #0a6e4b;
-  --k-neg: #d0213f;  --k-neg-bg: rgba(208, 33, 63, 0.1);   --k-neg-text: #a8172f;
-  --k-r-chip: 10px 2px;
-  --k-r-field: 20px 4px;
-  --k-r-bar: 5px 1px;
-  --k-r-card: 20px 4px;
-  --k-title-size: 12px;
-  --k-section-size: clamp(24px, 4.4vw, 32px);
-  --k-section-weight: 700;
-  --k-section-tracking: -0.035em;
-  --k-mark-w: 14px;
-  --k-mark-h: 8px;
-  --k-mark-r: 8px 1px;
-}
-html[data-design="k-fin"]:has(.dark-mode) {
-  --k-page: #0b161d;
-  --k-text: #e8f1f4;
-  --k-text-2: #b7c9d1;
-  --k-muted: #7f97a4;
-  --k-faint: rgba(153, 217, 217, 0.11);
-  --k-fill: rgba(104, 162, 185, 0.12);
-  --k-fill-strong: rgba(104, 162, 185, 0.22);
-  --k-surface: #14232c;
-  --k-accent: #68a2b9;
-  --k-on-accent: #0b161d;
-  --k-ink: #0b161d;
-  --k-mark: #99d9d9;
-  --k-pos: #4fd1a5;  --k-pos-bg: rgba(79, 209, 165, 0.14);  --k-pos-text: #93e8c9;
-  --k-neg: #ff5a6e;  --k-neg-bg: rgba(255, 90, 110, 0.15);  --k-neg-text: #ffa3ae;
-}
-
-/* 06 · Kraken · Abyss — deep sea blue with drifting ice glow */
-html[data-design="k-abyss"] {
-  --k-page:
-    radial-gradient(720px 420px at 8% -6%, rgba(153, 217, 217, 0.55), transparent 70%),
-    radial-gradient(620px 420px at 100% 28%, rgba(104, 162, 185, 0.22), transparent 70%),
-    #f1f7f8;
-  --k-text: #001628;
-  --k-text-2: #24465a;
-  --k-muted: #5f7e8f;
-  --k-faint: rgba(0, 22, 40, 0.09);
-  --k-fill: rgba(0, 22, 40, 0.045);
-  --k-fill-strong: rgba(0, 22, 40, 0.08);
-  --k-surface: #ffffff;
-  --k-accent: #355464;
-  --k-on-accent: #ffffff;
-  --k-ink: #f1f7f8;
-  --k-glow: #99d9d9;
-  --k-glow-2: #68a2b9;
-  --k-glow-opacity: 0.9;
-  --k-blob-opacity: 0.28;
-  --k-mark: #68a2b9;
-  --k-pos: #0b8a5f;  --k-pos-bg: rgba(11, 138, 95, 0.12);  --k-pos-text: #076b49;
-  --k-neg: #c8102e;  --k-neg-bg: rgba(200, 16, 46, 0.1);   --k-neg-text: #a10d25;
-  --k-r-chip: 8px;
-  --k-r-field: 14px;
-  --k-r-bar: 3px;
-  --k-r-card: 14px;
-  --k-title-size: 11px;
-}
-html[data-design="k-abyss"]:has(.dark-mode) {
-  --k-page:
-    radial-gradient(720px 420px at 8% -6%, rgba(153, 217, 217, 0.16), transparent 70%),
-    radial-gradient(620px 420px at 100% 28%, rgba(53, 84, 100, 0.45), transparent 70%),
-    #000f1c;
-  --k-text: #eaf8f9;
-  --k-text-2: #b9d3dc;
-  --k-muted: #7ea0b0;
-  --k-faint: rgba(153, 217, 217, 0.11);
-  --k-fill: rgba(153, 217, 217, 0.06);
-  --k-fill-strong: rgba(153, 217, 217, 0.12);
-  --k-surface: #071e30;
-  --k-accent: #99d9d9;
-  --k-on-accent: #001628;
-  --k-ink: #000f1c;
-  --k-glow-2: #355464;
-  --k-glow-opacity: 0.5;
-  --k-blob-opacity: 0.32;
-  --k-num-glow: 0 0 18px rgba(153, 217, 217, 0.35);
-  --k-mark: #99d9d9;
-  --k-pos: #4fd1a5;  --k-pos-bg: rgba(79, 209, 165, 0.14);  --k-pos-text: #93e8c9;
-  --k-neg: #ff5a6e;  --k-neg-bg: rgba(255, 90, 110, 0.15);  --k-neg-text: #ffa3ae;
-}
-
-/* 07 · Kraken · Pledge — big condensed numerals, type does the work */
-html[data-design="k-pledge"] {
-  --k-font-display: var(--k-font-condensed);
-  --k-font-hero: var(--k-font-condensed);
-  --k-page: #fafaf9;
-  --k-text: #001628;
-  --k-text-2: #2c3e4a;
-  --k-muted: #7a8790;
-  --k-faint: rgba(0, 22, 40, 0.09);
-  --k-fill: rgba(0, 22, 40, 0.04);
-  --k-fill-strong: rgba(0, 22, 40, 0.08);
-  --k-surface: #ffffff;
-  --k-accent: #001628;
-  --k-on-accent: #fafaf9;
-  --k-ink: #fafaf9;
-  --k-glow: #99d9d9;
-  --k-glow-opacity: 0.7;
-  --k-mark: transparent;
-  --k-pos: #0b8a5f;  --k-pos-bg: rgba(11, 138, 95, 0.12);  --k-pos-text: #076b49;
-  --k-neg: #c8102e;  --k-neg-bg: rgba(200, 16, 46, 0.1);   --k-neg-text: #a10d25;
-  --k-r-chip: 3px;
-  --k-r-field: 0;
-  --k-r-bar: 1px;
-  --k-r-card: 6px;
-  --k-title-size: 13px;
-  --k-title-tracking: 0.12em;
-  --k-title-case: uppercase;
-  --k-section-size: clamp(48px, 10vw, 92px);
-  --k-section-weight: 600;
-  --k-section-tracking: -0.01em;
-  --k-mark-w: 0px;
-  --k-row-line: var(--k-faint);
-}
-html[data-design="k-pledge"]:has(.dark-mode) {
-  --k-page: #001628;
-  --k-text: #eef7f8;
-  --k-text-2: #bcd0d8;
-  --k-muted: #7d97a6;
-  --k-faint: rgba(153, 217, 217, 0.12);
-  --k-fill: rgba(153, 217, 217, 0.06);
-  --k-fill-strong: rgba(153, 217, 217, 0.12);
-  --k-surface: #0a2236;
-  --k-accent: #99d9d9;
-  --k-on-accent: #001628;
-  --k-ink: #001628;
-  --k-glow-opacity: 0.35;
-  --k-pos: #4fd1a5;  --k-pos-bg: rgba(79, 209, 165, 0.14);  --k-pos-text: #93e8c9;
-  --k-neg: #ff5a6e;  --k-neg-bg: rgba(255, 90, 110, 0.15);  --k-neg-text: #ffa3ae;
-}
-
 /* 01 · Mono Ledger — say's hairline monochrome */
 html[data-design="mono-ledger"] {
   --k-radius-outer: clamp(10px, 2vw, 14px);
@@ -405,54 +80,6 @@ html[data-design="mono-ledger"]:has(.dark-mode) {
   --k-pos: #7ee2a8;  --k-pos-bg: rgba(126, 226, 168, 0.12);  --k-pos-text: #a8f0c6;
   --k-neg: #f28b82;  --k-neg-bg: rgba(242, 139, 130, 0.14);  --k-neg-text: #f7b4ad;
   --k-shadow: none;
-}
-
-/* 08 · Deep Sea — the glassy glow reference from round one */
-html[data-design="deep-sea"] {
-  --k-font-ui: var(--k-font-quick);
-  --k-page: #e3f3f6;
-  --k-bg: rgba(255, 255, 255, 0.5);
-  --k-surface: rgba(255, 255, 255, 0.85);
-  --k-card: rgba(255, 255, 255, 0.55);
-  --k-surface-muted: rgba(255, 255, 255, 0.35);
-  --k-border: rgba(8, 47, 73, 0.1);
-  --k-border-subtle: rgba(8, 47, 73, 0.06);
-  --k-text: #082f49;
-  --k-text-2: #0c4a6e;
-  --k-muted: #4a7891;
-  --k-accent: #0891b2;
-  --k-accent-soft: rgba(8, 145, 178, 0.14);
-  --k-on-accent: #ffffff;
-  --k-ink: #ffffff;
-  --k-glow-a: #67e8f9;
-  --k-glow-b: #a5b4fc;
-  --k-pos: #0d9488;  --k-pos-bg: rgba(13, 148, 136, 0.14);  --k-pos-text: #0f766e;
-  --k-neg: #e11d48;  --k-neg-bg: rgba(225, 29, 72, 0.12);   --k-neg-text: #be123c;
-  --k-shadow: 0 24px 60px -30px rgba(8, 47, 73, 0.35);
-  --k-shadow-sm: 0 8px 20px -10px rgba(8, 47, 73, 0.25);
-  --k-blur: 22px;
-}
-html[data-design="deep-sea"]:has(.dark-mode) {
-  --k-page: #020617;
-  --k-bg: rgba(2, 12, 27, 0.55);
-  --k-surface: rgba(15, 45, 70, 0.78);
-  --k-card: rgba(8, 30, 52, 0.5);
-  --k-surface-muted: rgba(0, 0, 0, 0.15);
-  --k-border: rgba(125, 211, 252, 0.16);
-  --k-border-subtle: rgba(125, 211, 252, 0.08);
-  --k-text: #e0f7ff;
-  --k-text-2: #b6e3f2;
-  --k-muted: #6fa8c0;
-  --k-accent: #22d3ee;
-  --k-accent-soft: rgba(34, 211, 238, 0.15);
-  --k-on-accent: #031525;
-  --k-ink: #031525;
-  --k-glow-a: #0e7490;
-  --k-glow-b: #4f46e5;
-  --k-pos: #2dd4bf;  --k-pos-bg: rgba(45, 212, 191, 0.16);  --k-pos-text: #99f6e4;
-  --k-neg: #fb7185;  --k-neg-bg: rgba(251, 113, 133, 0.18); --k-neg-text: #fecdd3;
-  --k-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.8);
-  --k-shadow-sm: 0 8px 20px -10px rgba(0, 0, 0, 0.6);
 }
 
 /* --------------------------------------------------------------------------
@@ -499,183 +126,123 @@ html[data-design]:not([data-design="original"]) body .app-container.dark-mode {
   font-feature-settings: "tnum" 1, "lnum" 1;
 }
 
-/* Hero numbers: the app's .money-token pins its own mono face; let the
-   hero/display face through wherever a skin sets one. */
-html[data-family] body .app-container :is(.summary-item .value, .ledger-table .kept-row td) .money-token {
-  font-family: inherit;
-}
 
 /* --------------------------------------------------------------------------
-   3a. Kraken family — open layout, hierarchy from type + space, brand glow
+   1b. Original family — the app's palette, containers and hierarchy.
+   Each variant changes one thing: glow, radius, contrast, scale, or ink.
    -------------------------------------------------------------------------- */
 
-html[data-family="kraken"] body .app-container {
-  /* header: logo halo, wordmark-weight title, quiet controls */
-  .header-system { gap: clamp(20px, 4vw, 36px); }
-  .header-title {
-    font-family: var(--k-font-display);
-    font-size: var(--k-title-size);
-    font-weight: var(--k-title-weight);
-    letter-spacing: var(--k-title-tracking);
-    text-transform: var(--k-title-case);
-    color: var(--k-text);
-    line-height: 1.05;
-  }
-  .icon-btn {
-    color: var(--k-muted);
-    border-radius: var(--k-r-chip);
-    &:hover { color: var(--k-text); background: var(--k-fill); transform: none; opacity: 1; }
-  }
-  .search-input {
-    font-family: var(--k-font-ui);
-    font-weight: 500;
-    background: var(--k-fill);
-    border: 1px solid transparent;
-    border-radius: var(--k-r-field);
-    &:focus {
-      background: var(--k-surface);
-      border-color: var(--k-faint);
-      box-shadow: 0 0 0 4px color-mix(in srgb, var(--k-glow) 30%, transparent);
-    }
-  }
+html:is([data-design="o-glow"], [data-design="o-sharp"], [data-design="o-airy"], [data-design="o-ink"], [data-design="o-night"]) {
+  --k-page: #dce5eb;
+  --k-bg: #dce5eb;
+  --k-surface: #ebeff3;
+  --k-surface-muted: rgba(255, 255, 255, 0.4);
+  --k-border: rgba(79, 84, 127, 0.2);
+  --k-border-subtle: rgba(79, 84, 127, 0.1);
+  --k-text: #4e537d;
+  --k-text-2: #4f547f;
+  --k-muted: rgba(79, 84, 127, 0.7);
+  --k-accent: #005670;
+  --k-accent-soft: #a7e4e9;
+  --k-glow: #a7e4e9;
+  --k-glow-opacity: 0.9;
+  --k-pos: #059669;
+  --k-pos-bg: #93d7c2;
+  --k-pos-text: #006948;
+  --k-neg: #dc2626;
+  --k-neg-bg: #fecaca;
+  --k-neg-text: #7f1d1d;
+  --k-radius-outer: clamp(9px, 3vw, 18px);
+  --k-card-pad: clamp(12px, 3vw, 24px);
+  --k-font-ui: ui-sans-serif, system-ui, sans-serif;
+  --k-font-num: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+html:is([data-design="o-glow"], [data-design="o-sharp"], [data-design="o-airy"], [data-design="o-ink"], [data-design="o-night"]):has(.dark-mode) {
+  --k-page: #42476e;
+  --k-bg: #42476e;
+  --k-surface: #4f547f;
+  --k-surface-muted: rgba(0, 0, 0, 0.15);
+  --k-border: rgba(191, 201, 216, 0.2);
+  --k-border-subtle: rgba(191, 201, 216, 0.1);
+  --k-text: #ebeff3;
+  --k-text-2: #bfc9d8;
+  --k-muted: rgba(191, 201, 216, 0.7);
+  --k-accent: #a7e4e9;
+  --k-accent-soft: rgba(167, 228, 233, 0.15);
+  --k-glow: #a7e4e9;
+  --k-glow-opacity: 0.35;
+  --k-pos: #34d399;
+  --k-pos-bg: rgba(0, 86, 112, 0.6);
+  --k-pos-text: #a7e4e9;
+  --k-neg: #f87171;
+  --k-neg-bg: rgba(185, 28, 28, 0.4);
+  --k-neg-text: #fca5a5;
+}
 
-  /* averages */
-  .summary-item .value {
-    font-family: var(--k-font-hero);
-    font-weight: var(--k-hero-weight);
-    letter-spacing: -0.04em;
-    color: var(--k-text);
-    text-shadow: var(--k-num-glow);
-  }
-  .summary-item .label { font-family: var(--k-font-ui); font-size: 10px; font-weight: 600; letter-spacing: 0.14em; color: var(--k-muted); }
-  .mini-map-header .attended-stat { font-family: var(--k-font-ui); font-weight: 600; letter-spacing: 0.14em; color: var(--k-text-2); }
-  .mini-map-sub-stat { font-family: var(--k-font-ui); font-weight: 500; letter-spacing: 0.1em; }
-  .mini-map-legend { font-family: var(--k-font-ui); font-weight: 600; letter-spacing: 0.1em; border-top: 0; padding-top: 0; }
-  .mini-map-season-marker { font-family: var(--k-font-ui); background: transparent; padding-inline: 2px; color: var(--k-muted); }
-  .stat-badge { border-radius: var(--k-r-chip); }
+/* 02 · Original · Glow — same palette, plus the glow behind the dots (see flourishes) */
 
-  /* attended-games grid: a soft brand glow behind the dots */
-  .summary-item.full-width-mobile {
-    position: relative;
-    isolation: isolate;
-  }
-  .summary-item.full-width-mobile::before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    inset: -28px -36px;
-    border-radius: 50%;
-    background: radial-gradient(closest-side, var(--k-glow) 0%, transparent 100%);
-    opacity: var(--k-glow-opacity);
-    filter: blur(18px);
-    pointer-events: none;
-  }
+/* 03 · Original · Sharp — tighter corners, small chips */
+html[data-design="o-sharp"] {
+  --k-radius-outer: 4px;
+  --k-card-pad: 12px;
+}
+html[data-design="o-sharp"] body .app-container .stat-badge,
+html[data-design="o-sharp"] body .app-container .row-label { border-radius: 2px; }
 
-  /* season: no card — the heading and whitespace carry the grouping */
-  .season-group { gap: clamp(14px, 2.5vw, 24px); }
-  .section-title {
-    display: flex;
-    align-items: center;
-    gap: 0.45em;
-    padding-inline: 0;
-    font-family: var(--k-font-display);
-    font-size: var(--k-section-size);
-    font-weight: var(--k-section-weight);
-    letter-spacing: var(--k-section-tracking);
-    text-transform: var(--k-section-case);
-    line-height: 0.95;
-    color: var(--k-text);
-    &::before {
-      content: "";
-      flex: none;
-      width: var(--k-mark-w);
-      height: var(--k-mark-h);
-      border-radius: var(--k-mark-r);
-      background: var(--k-mark);
-      box-shadow: 0 0 14px var(--k-mark);
-    }
-  }
-  .season-card,
-  .season-card.no-padding { background: transparent; border: 0; padding: 0; border-radius: 0; box-shadow: none; }
+/* 04 · Original · Ink — Kraken navy ink and ice, same containers */
+html[data-design="o-ink"] {
+  --k-page: #cdd9df;
+  --k-bg: #cdd9df;
+  --k-surface: #e6eef2;
+  --k-text: #001628;
+  --k-text-2: #24465a;
+  --k-muted: rgba(0, 22, 40, 0.6);
+  --k-border: rgba(0, 22, 40, 0.18);
+  --k-border-subtle: rgba(0, 22, 40, 0.09);
+  --k-accent: #355464;
+  --k-accent-soft: #99d9d9;
+}
+html[data-design="o-ink"]:has(.dark-mode) {
+  --k-page: #001628;
+  --k-bg: #001628;
+  --k-surface: #0b2c47;
+  --k-surface-muted: rgba(0, 0, 0, 0.2);
+  --k-text: #eaf6f7;
+  --k-text-2: #b9d6dc;
+  --k-muted: rgba(185, 214, 220, 0.6);
+  --k-border: rgba(153, 217, 217, 0.2);
+  --k-border-subtle: rgba(153, 217, 217, 0.1);
+  --k-accent: #99d9d9;
+  --k-accent-soft: rgba(153, 217, 217, 0.15);
+}
 
-  .ledger-container {
-    background: transparent;
-    border-radius: 0;
-    gap: clamp(16px, 4vw, 48px);
-    .ledger-content { padding: 0; }
-    .ledger-visual { padding: 0; border-left: 0; }
-  }
-  .ledger-table {
-    th .th-box { background: transparent; padding-inline: 0; font-family: var(--k-font-ui); font-weight: 600; letter-spacing: 0.14em; color: var(--k-muted); }
-    .row-label { border-radius: var(--k-r-chip); font-family: var(--k-font-ui); font-weight: 600; letter-spacing: 0.12em; }
-    .kept-row { color: var(--k-text); }
-    .kept-row td:not(:first-child) { font-family: var(--k-font-hero); text-shadow: var(--k-num-glow); }
-    .kept-row .label-badge { background: var(--k-accent); color: var(--k-on-accent); }
-    .sold-row .label-badge, .paid-row .label-badge { background: transparent; border-color: transparent; color: var(--k-muted); }
-    .divider-row .line { border-bottom: 1px solid var(--k-faint); }
-  }
-  .donut-visual {
-    svg { filter: drop-shadow(0 0 10px color-mix(in srgb, var(--k-glow) 40%, transparent)); }
-    svg circle:first-child { stroke: var(--k-track); }
-    svg circle:last-child { stroke: var(--k-accent); }
-    .percent { font-family: var(--k-font-hero); font-weight: var(--k-hero-weight); text-shadow: var(--k-num-glow); }
-    .text { font-family: var(--k-font-ui); color: var(--k-muted); letter-spacing: 0.16em; }
-  }
+/* 05 · Original · Airy — larger radii, more room, bigger type */
+html[data-design="o-airy"] {
+  --k-radius-outer: clamp(16px, 3.5vw, 26px);
+  --k-card-pad: clamp(18px, 4vw, 40px);
+}
 
-  /* chart: no box, just the bars */
-  .bar-chart-system {
-    border: 0;
-    border-radius: 0;
-    padding: 30px 0 0;
-    margin-top: clamp(20px, 4vw, 36px);
-    .net-badge { top: 0; right: 0; }
-    .bar { border-radius: var(--k-r-bar) !important; }
-    .zero-line { border-top-color: var(--k-faint); }
-  }
-  .chart-tooltip {
-    color: var(--k-ink);
-    border-radius: var(--k-r-card);
-    padding: 6px 10px;
-    font-family: var(--k-font-ui);
-    font-weight: 600;
-    box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.35);
-  }
-  .chart-tooltip .stat-badge.positive { background: var(--k-pos); color: var(--k-ink); }
-  .chart-tooltip .stat-badge.negative { background: var(--k-neg); color: var(--k-ink); }
-
-  /* table: no frame, header rule only, rounded hover fill */
-  .sales-table-wrapper {
-    background: transparent;
-    border: 0;
-    border-radius: 0;
-    margin-top: clamp(20px, 4vw, 36px);
-    thead { background: transparent; font-family: var(--k-font-ui); letter-spacing: 0.14em; color: var(--k-muted); }
-    thead th { border-bottom: 1px solid var(--k-faint); }
-    thead th:hover { background: transparent; color: var(--k-text); }
-    tbody tr { border-bottom: 1px solid var(--k-row-line); }
-    tbody tr:hover, tbody tr.is-hovered { background: transparent; }
-    tbody tr:hover td, tbody tr.is-hovered td { background: var(--k-fill); }
-    tbody tr:hover td:first-child, tbody tr.is-hovered td:first-child { border-start-start-radius: var(--k-r-chip); border-end-start-radius: var(--k-r-chip); }
-    tbody tr:hover td:last-child, tbody tr.is-hovered td:last-child { border-start-end-radius: var(--k-r-chip); border-end-end-radius: var(--k-r-chip); }
-  }
-
-  /* settings */
-  .modal-overlay { background: rgba(0, 10, 20, 0.35); backdrop-filter: blur(6px); }
-  .modal-content {
-    background: var(--k-surface);
-    border: 0;
-    border-radius: var(--k-r-card);
-    padding: 1.4rem;
-    box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.45);
-  }
-  .modal-header { border-bottom-color: var(--k-faint); }
-  .modal-title { font-family: var(--k-font-display); }
-  .switch-container { font-family: var(--k-font-ui); }
-  input:checked + .slider { background: var(--k-accent); }
-  .slider { border-radius: var(--k-r-chip); }
-  .slider::before { border-radius: var(--k-r-chip); }
-
-  .money-token .sign, .money-token .suffix { font-family: var(--k-font-ui); }
+/* 06 · Original · Night — deep Kraken navy with the glow, dark by default */
+html[data-design="o-night"]:has(.dark-mode) {
+  --k-page: #001628;
+  --k-bg: #001628;
+  --k-surface: #0a2236;
+  --k-surface-muted: rgba(0, 0, 0, 0.2);
+  --k-text: #eef7f8;
+  --k-text-2: #bcd6dd;
+  --k-muted: rgba(188, 214, 221, 0.6);
+  --k-border: rgba(153, 217, 217, 0.18);
+  --k-border-subtle: rgba(153, 217, 217, 0.09);
+  --k-accent: #99d9d9;
+  --k-accent-soft: rgba(153, 217, 217, 0.14);
+  --k-glow: #3a8a9a;
+  --k-glow-opacity: 0.55;
+  --k-pos: #4fd1a5;
+  --k-pos-bg: rgba(79, 209, 165, 0.14);
+  --k-pos-text: #93e8c9;
+  --k-neg: #ff6b7e;
+  --k-neg-bg: rgba(255, 107, 126, 0.15);
+  --k-neg-text: #ffadb7;
 }
 
 /* --------------------------------------------------------------------------
@@ -766,196 +333,46 @@ html[data-family="editorial"] body .app-container {
   .money-token .sign, .money-token .suffix { font-family: var(--k-font-ui); }
 }
 
-/* --------------------------------------------------------------------------
-   3c. Score family — rounded glass (Deep Sea)
-   -------------------------------------------------------------------------- */
-
-html[data-family="score"] body .app-container {
-  .header-title {
-    font-family: var(--k-font-display);
-    font-weight: 700;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    color: var(--k-text);
-    @media (min-width: 768px) { font-size: 13px; }
-  }
-  .icon-btn {
-    width: 40px;
-    height: 40px;
-    background: var(--k-card);
-    border: var(--k-border-w) solid var(--k-border-subtle);
-    box-shadow: var(--k-shadow-sm);
-    backdrop-filter: blur(var(--k-blur));
-    -webkit-backdrop-filter: blur(var(--k-blur));
-    transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), background 0.2s;
-    &:hover { opacity: 1; transform: scale(1.08); background: var(--k-surface); }
-    &:active { transform: scale(0.92); }
-  }
-  .search-input {
-    font-family: var(--k-font-ui);
-    font-weight: 600;
-    background: var(--k-card);
-    border: var(--k-border-w) solid var(--k-border);
-    box-shadow: var(--k-shadow-sm);
-    backdrop-filter: blur(var(--k-blur));
-    -webkit-backdrop-filter: blur(var(--k-blur));
-    &:focus { border-color: var(--k-accent); box-shadow: 0 0 0 4px var(--k-accent-soft); }
-  }
-
-  .summary-item .value { font-family: var(--k-font-hero); letter-spacing: -0.04em; color: var(--k-text); }
-  .summary-item .label { font-family: var(--k-font-ui); font-size: 9.5px; letter-spacing: 0.2em; color: var(--k-muted); }
-  .summary-item.full-width-mobile {
-    background: var(--k-card);
-    border: var(--k-border-w) solid var(--k-border-subtle);
-    border-radius: clamp(20px, 4vw, 32px);
-    padding: 18px 20px;
-    box-shadow: var(--k-shadow);
-    backdrop-filter: blur(var(--k-blur));
-    -webkit-backdrop-filter: blur(var(--k-blur));
-  }
-  .mini-map-header .attended-stat { font-family: var(--k-font-ui); letter-spacing: 0.16em; font-size: 9.5px; }
-  .mini-map-sub-stat { font-family: var(--k-font-ui); font-weight: 600; letter-spacing: 0.12em; font-size: 8px; }
-  .mini-map-season-marker { font-family: var(--k-font-ui); background: var(--k-bg); border-radius: 999px; padding: 2px 7px; color: var(--k-muted); }
-  .mini-map-legend { font-family: var(--k-font-ui); font-weight: 600; font-size: 8px; letter-spacing: 0.12em; }
-  .stat-badge { border-radius: 999px; padding: 0.4em 0.8em; }
-
-  .section-title {
-    display: flex;
-    align-items: center;
-    gap: 0.6em;
-    font-family: var(--k-font-display);
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    color: var(--k-text);
-    &::before {
-      content: "";
-      width: 0.55em;
-      height: 0.55em;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--k-glow-a), var(--k-glow-b));
-      flex: none;
-    }
-  }
-  .season-card {
-    background: var(--k-card);
-    border: var(--k-border-w) solid var(--k-border-subtle);
-    padding: var(--k-card-pad);
-    box-shadow: var(--k-shadow);
-    backdrop-filter: blur(var(--k-blur));
-    -webkit-backdrop-filter: blur(var(--k-blur));
-    &.no-padding { background: transparent; border: none; padding: 0; box-shadow: none; backdrop-filter: none; }
-  }
-  .ledger-container { background: var(--k-bg); }
-  .ledger-table {
-    th .th-box { border-radius: 0.5rem; font-family: var(--k-font-ui); letter-spacing: 0.14em; color: var(--k-muted); }
-    .row-label { border-radius: 0.6rem; font-family: var(--k-font-ui); letter-spacing: 0.14em; }
-    .kept-row td:not(:first-child) { font-family: var(--k-font-hero); }
-    .kept-row .label-badge { background: linear-gradient(135deg, var(--k-glow-a), var(--k-glow-b)); color: var(--k-on-accent); }
-    .sold-row .label-badge, .paid-row .label-badge { background: var(--k-surface); border-color: var(--k-border-subtle); }
-  }
-  .donut-visual {
-    svg circle:first-child { stroke: var(--k-surface); }
-    svg circle:last-child { stroke: var(--k-accent); stroke-linecap: round; }
-    .percent { font-family: var(--k-font-hero); }
-    .text { font-family: var(--k-font-ui); color: var(--k-muted); letter-spacing: 0.18em; }
-  }
-
-  .bar-chart-system { border: var(--k-border-w) solid var(--k-border-subtle); }
-  .bar-chart-system .bar { border-radius: 5px !important; }
-  .bar-chart-system .zero-line { border-top-style: dashed; }
-  .chart-tooltip { color: var(--k-ink); border-radius: 0.75rem; padding: 6px 10px; font-family: var(--k-font-ui); font-weight: 600; box-shadow: var(--k-shadow-sm); }
-  .chart-tooltip .stat-badge.positive { background: var(--k-pos); color: var(--k-ink); }
-  .chart-tooltip .stat-badge.negative { background: var(--k-neg); color: var(--k-ink); }
-
-  .sales-table-wrapper {
-    background: var(--k-surface);
-    border: var(--k-border-w) solid var(--k-border-subtle);
-    thead { background: var(--k-bg); font-family: var(--k-font-ui); letter-spacing: 0.14em; }
-    tbody tr { border-bottom-color: var(--k-border-subtle); }
-    tbody tr:hover { background: var(--k-bg); }
-    tbody tr.is-hovered { background: var(--k-accent-soft); }
-  }
-
-  .modal-overlay { background: rgba(0, 0, 0, 0.35); backdrop-filter: blur(8px); }
-  .modal-content {
-    background: var(--k-surface);
-    border: var(--k-border-w) solid var(--k-border-subtle);
-    border-radius: clamp(20px, 4vw, 28px);
-    padding: 1.5rem;
-    box-shadow: var(--k-shadow);
-    transform: scale(0.94) translateY(8px);
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  .modal-overlay.open .modal-content { transform: none; }
-  .modal-title, .switch-container { font-family: var(--k-font-ui); letter-spacing: 0.16em; }
-  input:checked + .slider { background: linear-gradient(135deg, var(--k-glow-a), var(--k-glow-b)); }
-
-  .money-token .sign, .money-token .suffix { font-family: var(--k-font-ui); }
-}
-
 
 /* --------------------------------------------------------------------------
    4. Per-design flourishes
    -------------------------------------------------------------------------- */
 
-/* Drifting light blobs under the content (Abyss, Deep Sea) */
-html:is([data-design="k-abyss"], [data-design="deep-sea"]) body::before,
-html:is([data-design="k-abyss"], [data-design="deep-sea"]) body::after {
+/* Glow behind the attended-games dot grid (Glow and Night) */
+html:is([data-design="o-glow"], [data-design="o-night"]) body .app-container .summary-item.full-width-mobile {
+  position: relative;
+  isolation: isolate;
+}
+html:is([data-design="o-glow"], [data-design="o-night"]) body .app-container .summary-item.full-width-mobile::before {
   content: "";
-  position: fixed;
+  position: absolute;
   z-index: -1;
-  width: 62vmax;
-  height: 62vmax;
+  inset: -28px -36px;
   border-radius: 50%;
-  filter: blur(90px);
-  opacity: var(--k-blob-opacity, 0.55);
+  background: radial-gradient(closest-side, var(--k-glow) 0%, transparent 100%);
+  opacity: var(--k-glow-opacity);
+  filter: blur(18px);
   pointer-events: none;
-  animation: kt-drift 22s ease-in-out infinite alternate;
-}
-html[data-design="deep-sea"] body::before { background: var(--k-glow-a); top: -22vmax; left: -18vmax; }
-html[data-design="deep-sea"] body::after { background: var(--k-glow-b); bottom: -26vmax; right: -22vmax; animation-delay: -11s; }
-html[data-design="k-abyss"] body::before { background: var(--k-glow); top: -30vmax; left: -26vmax; }
-html[data-design="k-abyss"] body::after { background: var(--k-glow-2); bottom: -34vmax; right: -28vmax; animation-delay: -11s; }
-@keyframes kt-drift {
-  from { transform: translate3d(0, 0, 0) scale(1); }
-  to { transform: translate3d(8vmax, 6vmax, 0) scale(1.15); }
 }
 
-/* Red Alert: condensed caps on the small labels too */
-html[data-design="k-red"] body .app-container {
-  .summary-item .label, .ledger-table th .th-box, .sales-table-wrapper thead, .mini-map-header .attended-stat {
-    font-family: var(--k-font-condensed);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-  }
-  .row-label { font-family: var(--k-font-condensed); font-size: 11px; }
+/* Airy: scale the hierarchy — bigger season heads, averages and gaps */
+html[data-design="o-airy"] body .app-container .dashboard-layout { gap: clamp(32px, 6vw, 64px); }
+html[data-design="o-airy"] body .app-container .section-title {
+  font-size: clamp(22px, 4vw, 30px);
+  letter-spacing: 0.06em;
+}
+html[data-design="o-airy"] body .app-container .summary-item .value {
+  font-size: clamp(26px, 5vw, 48px);
+}
+html[data-design="o-airy"] body .app-container .summary-item .label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
 }
 
-/* Pledge: underline search, oversized averages, season year as the headline */
-html[data-design="k-pledge"] body .app-container {
-  .search-input {
-    background: transparent;
-    border: 0;
-    border-bottom: 2px solid var(--k-text);
-    padding-inline: 0;
-    &:focus { background: transparent; box-shadow: 0 8px 18px -14px var(--k-glow); border-color: var(--k-text); }
-  }
-  .search-clear { right: 0; }
-  .summary-item .value { font-size: clamp(30px, 6vw, 56px); letter-spacing: -0.02em; }
-  .section-title { gap: 0; }
-  .section-title::before { display: none; }
-  .ledger-table .kept-row td:not(:first-child) { font-size: clamp(22px, 3.6vw, 34px); letter-spacing: -0.01em; }
-}
-
-/* Tide: soft glow under the kept chip */
-html[data-design="k-tide"] body .app-container .ledger-table .kept-row .label-badge {
-  box-shadow: 0 6px 18px -6px color-mix(in srgb, var(--k-glow) 70%, transparent);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html[data-design] body::before,
-  html[data-design] body::after { animation: none !important; }
+/* Ink: the kept chip takes the navy ink, not the grey */
+html[data-design="o-ink"] body .app-container .kept-row .label-badge {
+  background: var(--k-accent);
+  color: var(--k-page);
 }
 
 /* --------------------------------------------------------------------------
@@ -1001,3 +418,4 @@ html[data-design="k-tide"] body .app-container .ledger-table .kept-row .label-ba
 .kt-hud-count { font: 500 10px/1 "JetBrains Mono", ui-monospace, monospace; opacity: 0.55; }
 .kt-hud-name { font-weight: 600; }
 .kt-hud-note { font-size: 10.5px; opacity: 0.6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+

@@ -9,19 +9,17 @@ export type Design = {
   slug: string;
   name: string;
   note: string;
-  family?: 'kraken' | 'editorial' | 'score';
+  family?: 'editorial';
 };
 
 export const DESIGNS: Design[] = [
-  { slug: 'original', name: 'Original', note: 'The current slate system' },
+  { slug: 'original', name: 'Original', note: 'The app as it was, anchor and all' },
+  { slug: 'o-glow', name: 'Original · Glow', note: 'Same palette, with the soft glow behind the attended dots' },
+  { slug: 'o-sharp', name: 'Original · Sharp', note: 'Same containers, tighter 4px corners' },
+  { slug: 'o-ink', name: 'Original · Ink', note: 'Kraken navy ink and ice, same containers' },
+  { slug: 'o-airy', name: 'Original · Airy', note: 'Bigger type, more room, rounder cards' },
+  { slug: 'o-night', name: 'Original · Night', note: 'Original light; deep Kraken navy in dark mode, with the glow' },
   { slug: 'mono-ledger', name: 'Mono Ledger', note: 'Say-style hairlines, Inter, quiet monochrome', family: 'editorial' },
-  { slug: 'k-ice', name: 'Kraken · Ice', note: 'Ledger restraint, ice-blue halo, 4px corners', family: 'kraken' },
-  { slug: 'k-red', name: 'Kraken · Red Alert', note: 'Square 0px corners, condensed caps, one red mark', family: 'kraken' },
-  { slug: 'k-tide', name: 'Kraken · Tide', note: 'Everything pill-round, boundless blue', family: 'kraken' },
-  { slug: 'k-fin', name: 'Kraken · Fin', note: 'Asymmetric fin-cut corners, shadow blue', family: 'kraken' },
-  { slug: 'k-abyss', name: 'Kraken · Abyss', note: 'Deep sea blue with drifting ice glow', family: 'kraken' },
-  { slug: 'k-pledge', name: 'Kraken · Pledge', note: 'Big condensed numerals, type does the work', family: 'kraken' },
-  { slug: 'deep-sea', name: 'Deep Sea', note: 'Round-one glass + glow, for reference', family: 'score' },
 ];
 
 const STORAGE_KEY = 'kt-design';
