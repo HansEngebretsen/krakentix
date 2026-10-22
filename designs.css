@@ -384,23 +384,6 @@ html[data-design="bw-serif"] body .app-container .ledger-table .kept-row td:not(
   font-family: var(--k-font-num);
 }
 
-/* B&W header glow — a soft gray bloom behind the top bar */
-html[data-design^="bw-"] body .app-container .top-bar { isolation: isolate; }
-html[data-design^="bw-"] body .app-container .top-bar::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  left: 0;
-  right: 0;
-  top: -20px;
-  height: 180px;
-  background:
-    radial-gradient(40% 70% at 12% 45%, var(--k-glow) 0%, transparent 70%),
-    radial-gradient(35% 70% at 88% 45%, var(--k-glow) 0%, transparent 70%);
-  opacity: 1;
-  filter: blur(14px);
-  pointer-events: none;
-}
 
 /* Table lines — B&W and mono: hairlines connect the ledger rows and the sales rows */
 html:is([data-design^="bw-"], [data-design^="m-"]) body .app-container .ledger-table { border-spacing: 0; }
@@ -413,6 +396,20 @@ html:is([data-design^="bw-"], [data-design^="m-"]) body .app-container .ledger-t
 html:is([data-design^="bw-"], [data-design^="m-"]) body .app-container .sales-table-wrapper tbody tr { border-bottom: 0; }
 html:is([data-design^="bw-"], [data-design^="m-"]) body .app-container .sales-table-wrapper tbody td { border-bottom: 1px solid var(--k-border-subtle); }
 html:is([data-design^="bw-"], [data-design^="m-"]) body .app-container .sales-table-wrapper tbody tr:last-child td { border-bottom: 0; }
+
+/* B&W: the mini-map glow is the only soft effect — no other shadows */
+html[data-design^="bw-"] body .app-container :is(.modal-content, .chart-tooltip, .stat-badge) { box-shadow: none; }
+
+/* Click-to-row highlight: the app fades rows through --color-border-base,
+   which is solid black/white in B&W. Use the soft accent wash instead. */
+html[data-design]:not([data-design="original"]) body .app-container .row-highlight td {
+  animation-name: kt-row-highlight;
+}
+@keyframes kt-row-highlight {
+  0% { background-color: transparent; }
+  10%, 90% { background-color: var(--color-accent-bg); }
+  100% { background-color: transparent; }
+}
 
 /* 02 · Original · Glow — same palette, plus the glow behind the dots (see flourishes) */
 
@@ -574,11 +571,11 @@ html[data-family="editorial"] body .app-container {
    -------------------------------------------------------------------------- */
 
 /* Glow behind the attended-games dot grid (Glow and Night) */
-html:is([data-design="o-glow"], [data-design="o-night"], [data-design="m-plex"], [data-design="m-jet"], [data-design="m-space"]) body .app-container .summary-item.full-width-mobile {
+html:is([data-design="o-glow"], [data-design="o-night"], [data-design="m-plex"], [data-design="m-jet"], [data-design="m-space"], [data-design^="bw-"]) body .app-container .summary-item.full-width-mobile {
   position: relative;
   isolation: isolate;
 }
-html:is([data-design="o-glow"], [data-design="o-night"], [data-design="m-plex"], [data-design="m-jet"], [data-design="m-space"]) body .app-container .summary-item.full-width-mobile::before {
+html:is([data-design="o-glow"], [data-design="o-night"], [data-design="m-plex"], [data-design="m-jet"], [data-design="m-space"], [data-design^="bw-"]) body .app-container .summary-item.full-width-mobile::before {
   content: "";
   position: absolute;
   z-index: -1;
