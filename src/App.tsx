@@ -243,8 +243,8 @@ input:checked + .slider:before { transform: translateX(12px); }
     width: 100vw;
     margin-inline: calc(50% - 50vw);
     padding: var(--space-4) var(--space-4) 0;
-    @media (min-width: 768px) { padding: var(--space-6) var(--space-6) 0; }
-    @media (min-width: 1024px) { padding: var(--space-8) var(--space-8) 0; }
+    @media (min-width: 768px) { padding: 12px 12px 0; }
+    @media (min-width: 1024px) { padding: 12px 12px 0; }
   }
 
   .logo-container {
