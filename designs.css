@@ -337,6 +337,40 @@ html[data-design="bw-plex"] {
   --k-font-num: "IBM Plex Mono", ui-monospace, monospace;
   --k-card-pad: 12px;
 }
+/* Plex keeps black & white but cools both ends with a hint of Kraken ice,
+   and carries the Night-style teal glow behind the mini-map in both modes */
+html[data-design="bw-plex"] {
+  --k-page: #f6fafb;
+  --k-bg: #f6fafb;
+  --k-surface: #f6fafb;
+  --k-surface-muted: #f6fafb;
+  --k-card: #f6fafb;
+  --k-border: #0b1a21;
+  --k-border-subtle: #d5e1e5;
+  --k-text: #071319;
+  --k-text-2: #13232b;
+  --k-muted: #54666e;
+  --k-accent: #071319;
+  --k-accent-soft: #e4eff2;
+  --k-glow: #a6dce2;
+  --k-glow-opacity: 0.55;
+}
+html[data-design="bw-plex"]:has(.dark-mode) {
+  --k-page: #050c10;
+  --k-bg: #050c10;
+  --k-surface: #050c10;
+  --k-surface-muted: #050c10;
+  --k-card: #050c10;
+  --k-border: #e8f4f6;
+  --k-border-subtle: #1a2a31;
+  --k-text: #eef7f9;
+  --k-text-2: #d6e5e9;
+  --k-muted: #8ea3ab;
+  --k-accent: #eef7f9;
+  --k-accent-soft: #10212a;
+  --k-glow: #2f7f8c;
+  --k-glow-opacity: 0.55;
+}
 
 /* B&W · Round — soft 18px cards with a matching search field */
 html[data-design="bw-round"] {
