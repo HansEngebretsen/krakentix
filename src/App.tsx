@@ -223,10 +223,10 @@ input:checked + .slider:before { transform: translateX(12px); }
   background-color: var(--color-bg-main);
   color: var(--color-text-dark);
   font-family: var(--font-sans);
-  padding: var(--space-6) var(--space-4);
+  padding: 0 var(--space-4) var(--space-6);
   transition: background-color 0.2s, color 0.2s;
-  @media (min-width: 768px) { padding: var(--space-12) var(--space-6); }
-  @media (min-width: 1024px) { padding: var(--space-16) var(--space-8); }
+  @media (min-width: 768px) { padding: 0 var(--space-6) var(--space-12); }
+  @media (min-width: 1024px) { padding: 0 var(--space-8) var(--space-16); }
 }
 
 .dashboard-layout {
@@ -249,7 +249,11 @@ input:checked + .slider:before { transform: translateX(12px); }
     justify-content: space-between;
     align-items: center;
     position: relative;
-    padding-block: 0;
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+    padding: var(--space-4) var(--space-4) 0;
+    @media (min-width: 768px) { padding: var(--space-6) var(--space-6) 0; }
+    @media (min-width: 1024px) { padding: var(--space-8) var(--space-8) 0; }
   }
 
   .logo-container {
@@ -268,8 +272,8 @@ input:checked + .slider:before { transform: translateX(12px); }
     width: 22px;
     height: 22px;
     background: var(--color-text-dark);
-    -webkit-mask: url("./assets/logo.svg") center / contain no-repeat;
-    mask: url("./assets/logo.svg") center / contain no-repeat;
+    -webkit-mask: url("./assets/logo.png") center / contain no-repeat;
+    mask: url("./assets/logo.png") center / contain no-repeat;
   }
 
   .header-title {

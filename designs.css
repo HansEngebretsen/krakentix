@@ -118,7 +118,8 @@ html[data-design]:not([data-design="original"]) body .app-container.dark-mode {
   --font-mono: var(--k-font-num);
   --radius-outer: var(--k-radius-outer);
   --radius-inner: max(4px, calc(var(--k-radius-outer) - var(--k-card-pad)));
-  --radius-header: 999px;
+  /* search field matches the cards; designs can override with --k-input-r */
+  --radius-header: var(--k-input-r, var(--k-radius-outer));
 
   background-color: transparent;
   font-family: var(--k-font-ui);
@@ -268,6 +269,120 @@ html[data-design="m-bw"] body .app-container .stat-badge.negative { box-shadow: 
 html[data-design="m-bw"] body .app-container .kept-row .label-badge { background: var(--k-text); color: var(--k-page); }
 html[data-design="m-bw"] body .app-container .section-title { text-transform: uppercase; letter-spacing: 0.04em; }
 html[data-design="m-bw"] body .app-container .summary-item .label { color: var(--k-text); }
+
+/* --------------------------------------------------------------------------
+   1d. Black & white family — grayscale, with a faint green and red tint on
+   gains and losses only. Each variant changes type, radius or structure.
+   -------------------------------------------------------------------------- */
+
+html[data-design^="bw-"] {
+  --k-page: #ffffff;
+  --k-bg: #ffffff;
+  --k-surface: #ffffff;
+  --k-surface-muted: #ffffff;
+  --k-card: #ffffff;
+  --k-border: #000000;
+  --k-border-subtle: #dcdcdc;
+  --k-text: #000000;
+  --k-text-2: #1a1a1a;
+  --k-muted: #5c5c5c;
+  --k-accent: #000000;
+  --k-accent-soft: #efefef;
+  --k-glow: #d6d6d6;
+  --k-glow-opacity: 0.6;
+  --k-pos: #4f8a68;
+  --k-pos-bg: #edf5ef;
+  --k-pos-text: #1f4a34;
+  --k-neg: #a35a5a;
+  --k-neg-bg: #f7eeee;
+  --k-neg-text: #6b2a2a;
+  --k-radius-outer: 0px;
+  --k-card-pad: 14px;
+  --k-font-ui: "Inter", -apple-system, system-ui, sans-serif;
+  --k-font-num: "JetBrains Mono", ui-monospace, monospace;
+  --k-shadow: none;
+  --k-shadow-sm: none;
+}
+html[data-design^="bw-"]:has(.dark-mode) {
+  --k-page: #000000;
+  --k-bg: #000000;
+  --k-surface: #000000;
+  --k-surface-muted: #000000;
+  --k-card: #000000;
+  --k-border: #ffffff;
+  --k-border-subtle: #333333;
+  --k-text: #ffffff;
+  --k-text-2: #e6e6e6;
+  --k-muted: #9a9a9a;
+  --k-accent: #ffffff;
+  --k-accent-soft: #1c1c1c;
+  --k-glow: #3a3a3a;
+  --k-pos: #7fb797;
+  --k-pos-bg: #0f1a14;
+  --k-pos-text: #b9dcc6;
+  --k-neg: #c48a8a;
+  --k-neg-bg: #1a1010;
+  --k-neg-text: #e6c2c2;
+}
+
+/* B&W · Sharp — hard edges, uppercase section heads */
+html[data-design="bw-sharp"] body .app-container .section-title {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* B&W · Plex — IBM Plex Mono everywhere, hairline boxes */
+html[data-design="bw-plex"] {
+  --k-font-ui: "IBM Plex Mono", ui-monospace, monospace;
+  --k-font-num: "IBM Plex Mono", ui-monospace, monospace;
+  --k-card-pad: 12px;
+}
+
+/* B&W · Round — soft 18px cards with a matching search field */
+html[data-design="bw-round"] {
+  --k-radius-outer: 18px;
+  --k-card-pad: 18px;
+  --k-surface: #f5f5f5;
+  --k-card: #f5f5f5;
+  --k-border: #cfcfcf;
+  --k-border-subtle: #e6e6e6;
+}
+html[data-design="bw-round"]:has(.dark-mode) {
+  --k-surface: #141414;
+  --k-card: #141414;
+  --k-border: #3a3a3a;
+  --k-border-subtle: #262626;
+}
+
+/* B&W · Serif — Newsreader heads, no boxes, ruled sections */
+html[data-design="bw-serif"] {
+  --k-font-display: "Newsreader", Georgia, serif;
+}
+html[data-design="bw-serif"] body .app-container .header-title,
+html[data-design="bw-serif"] body .app-container .section-title {
+  font-family: var(--k-font-display);
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+}
+html[data-design="bw-serif"] body .app-container .section-title {
+  font-size: clamp(22px, 4vw, 30px);
+  border-top: 1px solid var(--k-border);
+  padding-top: 8px;
+}
+html[data-design="bw-serif"] body .app-container .season-card {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+html[data-design="bw-serif"] body .app-container .sales-table-wrapper,
+html[data-design="bw-serif"] body .app-container .bar-chart-system {
+  border-color: var(--k-border-subtle);
+}
+html[data-design="bw-serif"] body .app-container .summary-item .value,
+html[data-design="bw-serif"] body .app-container .ledger-table .kept-row td:not(:first-child) {
+  font-family: var(--k-font-num);
+}
 
 /* 02 · Original · Glow — same palette, plus the glow behind the dots (see flourishes) */
 

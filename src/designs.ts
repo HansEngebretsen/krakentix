@@ -23,6 +23,10 @@ export const DESIGNS: Design[] = [
   { slug: 'm-jet', name: 'Mono · Jet', note: 'JetBrains Mono throughout, rounder 12px cards' },
   { slug: 'm-space', name: 'Mono · Space', note: 'Space Mono labels, Inter numerals, pill chips' },
   { slug: 'm-bw', name: 'Black & White', note: 'Pure grayscale, hard edges, solid black badges' },
+  { slug: 'bw-sharp', name: 'B&W · Sharp', note: 'Grayscale, hard edges, faint green and red on gains and losses' },
+  { slug: 'bw-plex', name: 'B&W · Plex', note: 'IBM Plex Mono throughout, hairline boxes' },
+  { slug: 'bw-round', name: 'B&W · Round', note: 'Soft 18px cards with a matching search field' },
+  { slug: 'bw-serif', name: 'B&W · Serif', note: 'Newsreader headings, no boxes, ruled sections' },
   { slug: 'mono-ledger', name: 'Mono Ledger', note: 'Say-style hairlines, Inter, quiet monochrome', family: 'editorial' },
 ];
 
