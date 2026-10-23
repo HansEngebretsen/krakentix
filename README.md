@@ -50,7 +50,7 @@ Five seasons of Seattle Kraken season tickets, every seat I kept or resold, laid
 </td>
 <td width="50%">
 <h3>Make your own</h3>
-<p>Paste one command into Claude Code. It reads your ticket emails, works out every game you kept or resold, and builds this same site from your numbers, for any team. <a href="MAKE_YOUR_OWN.md">Here's what it does</a>.</p>
+<p>Copy the prompt from the About dialog into any AI assistant, then answer its questions and connect your email. It works out every game you kept or resold and builds this same site with your numbers, for any team. <a href="MAKE_YOUR_OWN.md">Here's what it follows</a>.</p>
 </td>
 </tr>
 </table>

@@ -6,6 +6,10 @@ const SEATS = TICKETS.seats;
 // Seasons whose gain/loss shows even when some seats were kept (e.g. a face-value seat sold to a friend)
 const PARTIAL_GL_SEASONS = new Set(TICKETS.seasons.filter(s => s.showPartialGainLoss).map(s => s.id));
 
+// The About dialog's "Make your own" prompt: works in any assistant, and falls back to walking
+// the person through the commands when the assistant can't run them itself
+const MAKE_PROMPT = 'Help me build my own season ticket breakdown. Follow https://github.com/HansEngebretsen/krakentix/blob/main/MAKE_YOUR_OWN.md, starting with `npx degit HansEngebretsen/krakentix my-tickets`. If you can\'t run commands, walk me through them.';
+
 // Design Tokens & Semantic Variables (Scaled to 75%)
 const CSS_VARS = `
 :root {
@@ -1212,6 +1216,15 @@ export default function App() {
   };
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [promptCopied, setPromptCopied] = useState(false);
+  const makePromptRef = useRef(null);
+  const copyMakePrompt = () => {
+    const done = () => { setPromptCopied(true); setTimeout(() => setPromptCopied(false), 1500); };
+    // no clipboard access (http, old browsers): select the text so it's one keystroke to copy
+    const selectIt = () => window.getSelection()?.selectAllChildren(makePromptRef.current);
+    if (navigator.clipboard) navigator.clipboard.writeText(MAKE_PROMPT).then(done, selectIt);
+    else selectIt();
+  };
 
   // Facts behind the ? dialog, computed from the season data
   const helpStats = useMemo(() => {
@@ -1391,8 +1404,20 @@ export default function App() {
             {helpStats.topOpponent && (
               <li>Most resold: <strong>{helpStats.topOpponent}</strong>, {helpStats.topCount} games</li>
             )}
-            <li>Want your own? <a href="./how/">Make one with your data&nbsp;→</a></li>
           </ul>
+          <section className="help-make">
+            <h3 className="modal-title">Make your own</h3>
+            <ol className="help-steps">
+              <li>Copy this into any AI assistant</li>
+            </ol>
+            <div className="help-prompt">
+              <p ref={makePromptRef}>{MAKE_PROMPT}</p>
+              <button onClick={copyMakePrompt}>{promptCopied ? 'Copied' : 'Copy'}</button>
+            </div>
+            <ol className="help-steps" start={2}>
+              <li>Answer its questions and connect your email or ticket account. It handles the rest.</li>
+            </ol>
+          </section>
           <hans-footer></hans-footer>
         </div>
       </div>

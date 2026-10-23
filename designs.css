@@ -304,8 +304,16 @@ html[data-design]:not([data-design="original"]) body .app-container .row-highlig
 .help-list li { margin-bottom: 10px; }
 .help-list li:last-child { margin-bottom: 0; }
 .help-list strong { color: var(--color-text-dark); font-weight: 700; }
-.help-list a { color: var(--color-text-dark); font-weight: 700; text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; }
-.help-list a:hover { text-decoration-thickness: 2px; }
+/* tall now that it holds two sections: scroll inside the dialog on short screens */
+.help-content { max-height: calc(100dvh - 32px); overflow-y: auto; }
+.help-make { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--color-border-subtle); }
+.help-make .modal-title { margin-bottom: 10px; }
+.help-steps { margin: 0; padding-left: 16px; font-size: 12px; line-height: 1.6; color: var(--color-text-base); }
+.help-steps li::marker { color: var(--color-text-dark); font-weight: 700; }
+.help-prompt { display: flex; gap: 8px; align-items: flex-start; margin: 8px 0 10px; padding: 10px; border: 1px solid var(--color-border-base); border-radius: max(4px, calc(var(--radius-inner) - 6px)); background: var(--color-bg-main); }
+.help-prompt p { flex: 1; margin: 0; font-family: var(--font-mono); font-size: 10.5px; line-height: 1.55; color: var(--color-text-dark); overflow-wrap: anywhere; user-select: all; }
+.help-prompt button { flex: none; font: 700 10px var(--font-sans); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-dark); background: var(--color-surface); border: 1px solid var(--color-border-base); border-radius: 99px; padding: 4px 9px; cursor: pointer; }
+.help-prompt button:hover { border-color: var(--color-text-dark); }
 hans-footer:not(:defined) { display: block; min-height: 76px; }
 
 /* --------------------------------------------------------------------------

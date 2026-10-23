@@ -1,14 +1,19 @@
 # Make your own
 
-Instructions for Claude. The person running you wants this site rebuilt around **their** season tickets: every game in their plan, which ones they went to, which ones they resold, and what it all cost. Any team, any sport.
+Instructions for an AI assistant (Claude, ChatGPT, Gemini, Cursor, Codex, or any other). The person who sent you here wants this site rebuilt around **their** season tickets: every game in their plan, which ones they went to, which ones they resold, and what it all cost. Any team, any sport.
 
 The site reads one file, `data/tickets.json`. It currently holds Hans's Kraken tickets as an example. Your job is to replace it with theirs. Don't change the app's code or styling.
 
-Work in this order and keep the person informed with short updates. If a step fails, say what you tried and ask; don't guess silently.
+Work in this order and keep the person informed with short updates. If a step fails, say what you tried and ask; don't guess silently. Keep the person's side simple: they answer questions and connect data, and you handle everything else.
 
-## 0. Clean the copy
+**If you can't run commands or edit files** (for example, a chat-only assistant), you still do the thinking, and they do the typing:
+- Give them each terminal command to paste, one block at a time, and ask what it printed.
+- Gather the data with whatever access you have (step 2), then give them the complete `data/tickets.json` to save into the `my-tickets` folder.
+- They need [Node](https://nodejs.org) installed for `npx` and `npm`. Check that first with `node -v`.
 
-This folder is a copy of Hans's site. Before anything else:
+## 0. Get and clean the copy
+
+If `my-tickets/` doesn't exist yet, run `npx degit HansEngebretsen/krakentix my-tickets`, then work inside it. It's a copy of Hans's site. Before anything else:
 
 - Delete `demos/`, `og.png` and `docs/` if they exist.
 - In `index.html`, delete every `<meta property="og:…">` and `<meta name="twitter:…">` tag.
@@ -30,7 +35,7 @@ Ask these in a single message. Offer the obvious default where there is one:
 
 Use the first source that works. Tell them which one you're using.
 
-**a. Gmail (preferred).** Use the Gmail connector's search. If you can't find Gmail tools, tell them to connect Gmail at claude.ai → Settings → Connectors, restart Claude Code, and try again. Run several searches and widen them until the counts make sense. Searches to start with (swap in their platform and team):
+**a. Their email (preferred).** Use an email tool if you have one (a Gmail connector, an MCP server, or similar). If you don't, tell them how to connect one in the assistant they're using: Claude and ChatGPT both have a Gmail connector in their settings. Then continue. Run several searches and widen them until the counts make sense. Searches to start with, in Gmail syntax (swap in their platform and team):
 
 | What | Search |
 |---|---|
@@ -55,7 +60,7 @@ Skip these, which show up in the same searches:
 
 These emails list the exact seats ("Seat(s) …") and an order number. Never copy those anywhere (see the privacy rule in step 5).
 
-**b. Their ticket account.** If there's no Gmail, use Claude in Chrome (if available) to open their ticket account's "My Tickets" / resale or sales history. They sign in themselves. Read the history. Don't change anything in the account.
+**b. Their ticket account.** If email isn't an option and you can use a browser, open their ticket account's "My Tickets" / resale or sales history. They sign in themselves. Read the history. Don't change anything in the account. If you can't use a browser, ask them to open that page and paste or screenshot it.
 
 **c. Files.** Ask them to drop exports into an `inbox/` folder here: a Google Takeout `.mbox`, CSV exports from the ticket site, PDF invoices or statements. Read those. `inbox/` is gitignored.
 

@@ -6,7 +6,7 @@ import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } fr
 import { createHash } from 'node:crypto';
 
 const serve = process.argv.includes('--serve');
-const STATIC_FILES = ['index.html', 'designs.css', 'favicon.svg', 'og.png', 'assets', 'how'];
+const STATIC_FILES = ['index.html', 'designs.css', 'favicon.svg', 'og.png', 'assets'];
 
 const options = {
   entryPoints: ['src/main.tsx'],
