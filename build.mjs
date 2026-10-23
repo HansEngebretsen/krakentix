@@ -2,11 +2,11 @@
 //   node build.mjs          → writes a static site to dist/
 //   node build.mjs --serve  → serves the repo root on $PORT (default 3000), rebuilding app.js in memory
 import * as esbuild from 'esbuild';
-import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 
 const serve = process.argv.includes('--serve');
-const STATIC_FILES = ['index.html', 'designs.css', 'favicon.svg', 'og.png', 'assets'];
+const STATIC_FILES = ['index.html', 'designs.css', 'favicon.svg', 'og.png', 'assets', 'how'];
 
 const options = {
   entryPoints: ['src/main.tsx'],
@@ -29,7 +29,8 @@ if (serve) {
   rmSync('dist', { recursive: true, force: true });
   mkdirSync('dist');
   await esbuild.build({ ...options, outfile: 'dist/app.js' });
-  for (const f of STATIC_FILES) cpSync(f, `dist/${f}`, { recursive: true });
+  // og.png is gone in copies made from MAKE_YOUR_OWN.md, so skip whatever is missing
+  for (const f of STATIC_FILES) if (existsSync(f)) cpSync(f, `dist/${f}`, { recursive: true });
 
   // Cache-bust: the CDN caches for hours, so point index.html at content-hashed URLs
   const hash = (f) => createHash('sha1').update(readFileSync(`dist/${f}`)).digest('hex').slice(0, 10);

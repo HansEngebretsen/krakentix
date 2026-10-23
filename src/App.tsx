@@ -1,5 +1,10 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { getDesign, setDesign } from './designs';
+import TICKETS from '../data/tickets.json';
+
+const SEATS = TICKETS.seats;
+// Seasons whose gain/loss shows even when some seats were kept (e.g. a face-value seat sold to a friend)
+const PARTIAL_GL_SEASONS = new Set(TICKETS.seasons.filter(s => s.showPartialGainLoss).map(s => s.id));
 
 // Design Tokens & Semantic Variables (Scaled to 75%)
 const CSS_VARS = `
@@ -910,414 +915,26 @@ input:checked + .slider:before { transform: translateX(12px); }
 }
 `;
 
-// --- DATA INJECTION & COMPILATION LOGIC ---
-const RAW_SCHEDULE = {
-  "2021-2022": [
-    { "date": "2021-10-23", "opponent": "Canucks", "location": "Home", "package": "Red" },
-    { "date": "2021-10-26", "opponent": "Canadiens", "location": "Home", "package": "Blue" },
-    { "date": "2021-10-28", "opponent": "Wild", "location": "Home", "package": "Blue" },
-    { "date": "2021-10-31", "opponent": "Rangers", "location": "Home", "package": "Red" },
-    { "date": "2021-11-04", "opponent": "Sabres", "location": "Home", "package": "Red" },
-    { "date": "2021-11-11", "opponent": "Ducks", "location": "Home", "package": "Blue" },
-    { "date": "2021-11-13", "opponent": "Wild", "location": "Home", "package": "Red" },
-    { "date": "2021-11-17", "opponent": "Blackhawks", "location": "Home", "package": "Blue" },
-    { "date": "2021-11-19", "opponent": "Avalanche", "location": "Home", "package": "Red" },
-    { "date": "2021-11-21", "opponent": "Capitals", "location": "Home", "package": "Blue" },
-    { "date": "2021-11-24", "opponent": "Hurricanes", "location": "Home", "package": "Blue" },
-    { "date": "2021-12-03", "opponent": "Oilers", "location": "Home", "package": "Red" },
-    { "date": "2021-12-06", "opponent": "Penguins", "location": "Home", "package": "Blue" },
-    { "date": "2021-12-09", "opponent": "Jets", "location": "Home", "package": "Red" },
-    { "date": "2021-12-11", "opponent": "Blue Jackets", "location": "Home", "package": "Blue" },
-    { "date": "2021-12-18", "opponent": "Oilers", "location": "Home", "package": "Blue" },
-    { "date": "2021-12-19", "opponent": "Maple Leafs", "location": "Home", "package": "Red" },
-    { "date": "2021-12-21", "opponent": "Coyotes", "location": "Home", "package": "Red" },
-    { "date": "2021-12-29", "opponent": "Flyers", "location": "Home", "package": "Blue" },
-    { "date": "2021-12-30", "opponent": "Flames", "location": "Home", "package": "Red" },
-    { "date": "2022-01-01", "opponent": "Canucks", "location": "Home", "package": "Blue" },
-    { "date": "2022-01-04", "opponent": "Islanders", "location": "Home", "package": "Red" },
-    { "date": "2022-01-06", "opponent": "Senators", "location": "Home", "package": "Blue" },
-    { "date": "2022-01-15", "opponent": "Kings", "location": "Home", "package": "Blue" },
-    { "date": "2022-01-17", "opponent": "Blackhawks", "location": "Home", "package": "Red" },
-    { "date": "2022-01-20", "opponent": "Sharks", "location": "Home", "package": "Red" },
-    { "date": "2022-01-21", "opponent": "Blues", "location": "Home", "package": "Blue" },
-    { "date": "2022-01-23", "opponent": "Panthers", "location": "Home", "package": "Red" },
-    { "date": "2022-01-25", "opponent": "Predators", "location": "Home", "package": "Blue" },
-    { "date": "2022-02-24", "opponent": "Bruins", "location": "Home", "package": "Blue" },
-    { "date": "2022-03-02", "opponent": "Predators", "location": "Home", "package": "Red" },
-    { "date": "2022-03-16", "opponent": "Lightning", "location": "Home", "package": "Red" },
-    { "date": "2022-03-19", "opponent": "Red Wings", "location": "Home", "package": "Red" },
-    { "date": "2022-03-30", "opponent": "Golden Knights", "location": "Home", "package": "Blue" },
-    { "date": "2022-04-01", "opponent": "Golden Knights", "location": "Home", "package": "Red" },
-    { "date": "2022-04-03", "opponent": "Stars", "location": "Home", "package": "Blue" },
-    { "date": "2022-04-09", "opponent": "Flames", "location": "Home", "package": "Blue" },
-    { "date": "2022-04-16", "opponent": "Devils", "location": "Home", "package": "Red" },
-    { "date": "2022-04-20", "opponent": "Avalanche", "location": "Home", "package": "Blue" },
-    { "date": "2022-04-27", "opponent": "Kings", "location": "Home", "package": "Red" },
-    { "date": "2022-04-29", "opponent": "Sharks", "location": "Home", "package": "Blue" }
-  ],
-  "2022-2023": [
-    { "date": "2022-09-27", "opponent": "CGY", "location": "Home", "package": "Preseason Red" },
-    { "date": "2022-10-01", "opponent": "VAN", "location": "Home", "package": "Preseason Blue" },
-    { "date": "2022-10-15", "opponent": "VGK", "location": "Home", "package": "Red" },
-    { "date": "2022-10-17", "opponent": "CAR", "location": "Home", "package": "Blue" },
-    { "date": "2022-10-19", "opponent": "STL", "location": "Home", "package": "Red" },
-    { "date": "2022-10-25", "opponent": "BUF", "location": "Home", "package": "Red" },
-    { "date": "2022-10-27", "opponent": "VAN", "location": "Home", "package": "Blue" },
-    { "date": "2022-10-29", "opponent": "PIT", "location": "Home", "package": "Blue" },
-    { "date": "2022-11-08", "opponent": "NSH", "location": "Home", "package": "Red" },
-    { "date": "2022-11-11", "opponent": "MIN", "location": "Home", "package": "Blue" },
-    { "date": "2022-11-13", "opponent": "WPG", "location": "Home", "package": "Blue" },
-    { "date": "2022-11-17", "opponent": "NYR", "location": "Home", "package": "Red" },
-    { "date": "2022-11-19", "opponent": "LAK", "location": "Home", "package": "Blue" },
-    { "date": "2022-11-23", "opponent": "SJS", "location": "Home", "package": "Red" },
-    { "date": "2022-12-01", "opponent": "WSH", "location": "Home", "package": "Red" },
-    { "date": "2022-12-03", "opponent": "FLA", "location": "Home", "package": "Blue" },
-    { "date": "2022-12-06", "opponent": "MTL", "location": "Home", "package": "Blue" },
-    { "date": "2022-12-18", "opponent": "WPG", "location": "Home", "package": "Red" },
-    { "date": "2022-12-20", "opponent": "STL", "location": "Home", "package": "Blue" },
-    { "date": "2022-12-28", "opponent": "CGY", "location": "Home", "package": "Red" },
-    { "date": "2022-12-30", "opponent": "EDM", "location": "Home", "package": "Red" },
-    { "date": "2023-01-01", "opponent": "NYI", "location": "Home", "package": "Blue" },
-    { "date": "2023-01-16", "opponent": "TBL", "location": "Home", "package": "Red" },
-    { "date": "2023-01-19", "opponent": "NJD", "location": "Home", "package": "Red" },
-    { "date": "2023-01-21", "opponent": "COL", "location": "Home", "package": "Blue" },
-    { "date": "2023-01-25", "opponent": "VAN", "location": "Home", "package": "Red" },
-    { "date": "2023-01-27", "opponent": "CGY", "location": "Home", "package": "Blue" },
-    { "date": "2023-01-28", "opponent": "CBJ", "location": "Home", "package": "Red" },
-    { "date": "2023-02-18", "opponent": "DET", "location": "Home", "package": "Red" },
-    { "date": "2023-02-23", "opponent": "BOS", "location": "Home", "package": "Blue" },
-    { "date": "2023-02-26", "opponent": "TOR", "location": "Home", "package": "Red" },
-    { "date": "2023-03-07", "opponent": "ANA", "location": "Home", "package": "Blue" },
-    { "date": "2023-03-09", "opponent": "OTT", "location": "Home", "package": "Blue" },
-    { "date": "2023-03-11", "opponent": "DAL", "location": "Home", "package": "Red" },
-    { "date": "2023-03-13", "opponent": "DAL", "location": "Home", "package": "Blue" },
-    { "date": "2023-03-18", "opponent": "EDM", "location": "Home", "package": "Blue" },
-    { "date": "2023-03-30", "opponent": "ANA", "location": "Home", "package": "Red" },
-    { "date": "2023-04-01", "opponent": "LAK", "location": "Home", "package": "Red" },
-    { "date": "2023-04-03", "opponent": "ARI", "location": "Home", "package": "Blue" },
-    { "date": "2023-04-06", "opponent": "ARI", "location": "Home", "package": "Red" },
-    { "date": "2023-04-08", "opponent": "CHI", "location": "Home", "package": "Blue" },
-    { "date": "2023-04-11", "opponent": "VGK", "location": "Home", "package": "Blue" },
-    { "date": "2023-04-13", "opponent": "VGK", "location": "Home", "package": "Blue" }
-  ],
-  "2023-2024": [
-    { "date": "2023-10-17", "opponent": "Colorado", "location": "Home", "package": "Red" },
-    { "date": "2023-10-19", "opponent": "Carolina", "location": "Home", "package": "Blue" },
-    { "date": "2023-10-21", "opponent": "NY Rangers", "location": "Home", "package": "Red" },
-    { "date": "2023-11-02", "opponent": "Nashville", "location": "Home", "package": "Blue" },
-    { "date": "2023-11-04", "opponent": "Calgary", "location": "Home", "package": "Red" },
-    { "date": "2023-11-11", "opponent": "Edmonton", "location": "Home", "package": "Blue" },
-    { "date": "2023-11-13", "opponent": "Colorado", "location": "Home", "package": "Blue" },
-    { "date": "2023-11-16", "opponent": "NY Islanders", "location": "Home", "package": "Red" },
-    { "date": "2023-11-20", "opponent": "Calgary", "location": "Home", "package": "Blue" },
-    { "date": "2023-11-22", "opponent": "San Jose", "location": "Home", "package": "Red" },
-    { "date": "2023-11-24", "opponent": "Vancouver", "location": "Home", "package": "Blue" },
-    { "date": "2023-12-07", "opponent": "New Jersey", "location": "Home", "package": "Blue" },
-    { "date": "2023-12-09", "opponent": "Tampa Bay", "location": "Home", "package": "Blue" },
-    { "date": "2023-12-10", "opponent": "Minnesota", "location": "Home", "package": "Red" },
-    { "date": "2023-12-12", "opponent": "Florida", "location": "Home", "package": "Blue" },
-    { "date": "2023-12-14", "opponent": "Chicago", "location": "Home", "package": "Red" },
-    { "date": "2023-12-16", "opponent": "Los Angeles", "location": "Home", "package": "Blue" },
-    { "date": "2023-12-29", "opponent": "Philadelphia", "location": "Home", "package": "Red" },
-    { "date": "2024-01-01", "opponent": "Vegas", "location": "Home", "package": "N/A" },
-    { "date": "2024-01-04", "opponent": "Ottawa", "location": "Home", "package": "Red" },
-    { "date": "2024-01-21", "opponent": "Toronto", "location": "Home", "package": "Red" },
-    { "date": "2024-01-24", "opponent": "Chicago", "location": "Home", "package": "Blue" },
-    { "date": "2024-01-26", "opponent": "St. Louis", "location": "Home", "package": "Red" },
-    { "date": "2024-01-28", "opponent": "Columbus", "location": "Home", "package": "Blue" },
-    { "date": "2024-02-19", "opponent": "Detroit", "location": "Home", "package": "Red" },
-    { "date": "2024-02-22", "opponent": "Vancouver", "location": "Home", "package": "Red" },
-    { "date": "2024-02-24", "opponent": "Minnesota", "location": "Home", "package": "Blue" },
-    { "date": "2024-02-26", "opponent": "Boston", "location": "Home", "package": "Blue" },
-    { "date": "2024-02-29", "opponent": "Pittsburgh", "location": "Home", "package": "Red" },
-    { "date": "2024-03-02", "opponent": "Edmonton", "location": "Home", "package": "Red" },
-    { "date": "2024-03-08", "opponent": "Winnipeg", "location": "Home", "package": "Blue" },
-    { "date": "2024-03-12", "opponent": "Vegas", "location": "Home", "package": "Red" },
-    { "date": "2024-03-14", "opponent": "Washington", "location": "Home", "package": "Blue" },
-    { "date": "2024-03-16", "opponent": "Nashville", "location": "Home", "package": "Red" },
-    { "date": "2024-03-18", "opponent": "Buffalo", "location": "Home", "package": "Red" },
-    { "date": "2024-03-24", "opponent": "Montreal", "location": "Home", "package": "Blue" },
-    { "date": "2024-03-26", "opponent": "Anaheim", "location": "Home", "package": "Blue" },
-    { "date": "2024-03-28", "opponent": "Anaheim", "location": "Home", "package": "Red" },
-    { "date": "2024-03-30", "opponent": "Dallas", "location": "Home", "package": "Blue" },
-    { "date": "2024-04-09", "opponent": "Arizona", "location": "Home", "package": "Red" },
-    { "date": "2024-04-11", "opponent": "San Jose", "location": "Home", "package": "Blue" }
-  ],
-  "2024-2025": [
-    { "date": "2024-09-22", "opponent": "CGY", "location": "Home", "package": "Preseason Blue" },
-    { "date": "2024-09-27", "opponent": "VAN", "location": "Home", "package": "Preseason Red" },
-    { "date": "2024-10-08", "opponent": "STL", "location": "Home", "package": "Red" },
-    { "date": "2024-10-17", "opponent": "PHI", "location": "Home", "package": "Blue" },
-    { "date": "2024-10-19", "opponent": "CGY", "location": "Home", "package": "Red" },
-    { "date": "2024-10-22", "opponent": "COL", "location": "Home", "package": "Blue" },
-    { "date": "2024-10-24", "opponent": "WPG", "location": "Home", "package": "Red" },
-    { "date": "2024-10-26", "opponent": "CAR", "location": "Home", "package": "Red" },
-    { "date": "2024-11-08", "opponent": "VGK", "location": "Home", "package": "Blue" },
-    { "date": "2024-11-12", "opponent": "CBJ", "location": "Home", "package": "Red" },
-    { "date": "2024-11-14", "opponent": "CHI", "location": "Home", "package": "Blue" },
-    { "date": "2024-11-16", "opponent": "NYI", "location": "Home", "package": "Blue" },
-    { "date": "2024-11-17", "opponent": "NYR", "location": "Home", "package": "Red" },
-    { "date": "2024-11-20", "opponent": "NSH", "location": "Home", "package": "Blue" },
-    { "date": "2024-11-27", "opponent": "ANA", "location": "Home", "package": "Red" },
-    { "date": "2024-11-30", "opponent": "SJS", "location": "Home", "package": "Blue" },
-    { "date": "2024-12-10", "opponent": "FLA", "location": "Home", "package": "Red" },
-    { "date": "2024-12-12", "opponent": "BOS", "location": "Home", "package": "Blue" },
-    { "date": "2024-12-14", "opponent": "TBL", "location": "Home", "package": "Red" },
-    { "date": "2024-12-17", "opponent": "OTT", "location": "Home", "package": "Red" },
-    { "date": "2024-12-30", "opponent": "UTA", "location": "Home", "package": "Blue" },
-    { "date": "2025-01-02", "opponent": "VAN", "location": "Home", "package": "Red" },
-    { "date": "2025-01-04", "opponent": "EDM", "location": "Home", "package": "Blue" },
-    { "date": "2025-01-06", "opponent": "NJD", "location": "Home", "package": "Red" },
-    { "date": "2025-01-18", "opponent": "LAK", "location": "Home", "package": "Red" },
-    { "date": "2025-01-20", "opponent": "BUF", "location": "Home", "package": "Blue" },
-    { "date": "2025-01-23", "opponent": "WSH", "location": "Home", "package": "Red" },
-    { "date": "2025-01-25", "opponent": "PIT", "location": "Home", "package": "Blue" },
-    { "date": "2025-01-28", "opponent": "ANA", "location": "Home", "package": "Blue" },
-    { "date": "2025-01-30", "opponent": "SJS", "location": "Home", "package": "Red" },
-    { "date": "2025-02-02", "opponent": "CGY", "location": "Home", "package": "Blue" },
-    { "date": "2025-02-04", "opponent": "DET", "location": "Home", "package": "Red" },
-    { "date": "2025-02-06", "opponent": "TOR", "location": "Home", "package": "Red" },
-    { "date": "2025-03-04", "opponent": "MIN", "location": "Home", "package": "Red" },
-    { "date": "2025-03-12", "opponent": "MTL", "location": "Home", "package": "Blue" },
-    { "date": "2025-03-14", "opponent": "UTA", "location": "Home", "package": "Red" },
-    { "date": "2025-03-16", "opponent": "WPG", "location": "Home", "package": "Blue" },
-    { "date": "2025-03-27", "opponent": "EDM", "location": "Home", "package": "Blue" },
-    { "date": "2025-03-29", "opponent": "DAL", "location": "Home", "package": "Blue" },
-    { "date": "2025-03-31", "opponent": "DAL", "location": "Home", "package": "Red" },
-    { "date": "2025-04-15", "opponent": "LAK", "location": "Home", "package": "Blue" }
-  ],
-  "2025-2026": [
-    { "date": "2025-09-21", "opponent": "VAN", "location": "Home", "package": "Preseason Blue" },
-    { "date": "2025-09-29", "opponent": "CGY", "location": "Home", "package": "Preseason Red" },
-    { "date": "2025-10-09", "opponent": "EDM", "location": "Home", "package": "Red" },
-    { "date": "2025-10-16", "opponent": "ANA", "location": "Home", "package": "Red" },
-    { "date": "2025-10-18", "opponent": "VGK", "location": "Home", "package": "Blue" },
-    { "date": "2025-10-25", "opponent": "EDM", "location": "Home", "package": "Red" },
-    { "date": "2025-10-28", "opponent": "MTL", "location": "Home", "package": "Blue" },
-    { "date": "2025-10-31", "opponent": "NYR", "location": "Home", "package": "Red" },
-    { "date": "2025-11-04", "opponent": "CHI", "location": "Home", "package": "Blue" },
-    { "date": "2025-11-06", "opponent": "SJS", "location": "Home", "package": "Red" },
-    { "date": "2025-11-11", "opponent": "CBJ", "location": "Home", "package": "Blue" },
-    { "date": "2025-11-13", "opponent": "WPG", "location": "Home", "package": "Red" },
-    { "date": "2025-11-15", "opponent": "SJS", "location": "Home", "package": "Blue" },
-    { "date": "2025-11-26", "opponent": "DAL", "location": "Home", "package": "Red" },
-    { "date": "2025-11-29", "opponent": "EDM", "location": "Home", "package": "Blue" },
-    { "date": "2025-12-09", "opponent": "MIN", "location": "Home", "package": "Blue" },
-    { "date": "2025-12-11", "opponent": "LAK", "location": "Home", "package": "Red" },
-    { "date": "2025-12-13", "opponent": "DET", "location": "Home", "package": "Red" },
-    { "date": "2025-12-14", "opponent": "BUF", "location": "Home", "package": "Blue" },
-    { "date": "2025-12-16", "opponent": "COL", "location": "Home", "package": "Red" },
-    { "date": "2025-12-28", "opponent": "PHI", "location": "Home", "package": "Blue" },
-    { "date": "2025-12-29", "opponent": "VAN", "location": "Home", "package": "Red" },
-    { "date": "2026-01-08", "opponent": "NSH", "location": "Home", "package": "Blue" },
-    { "date": "2026-01-09", "opponent": "MIN", "location": "Home", "package": "Red" },
-    { "date": "2026-01-20", "opponent": "PIT", "location": "Home", "package": "Red" },
-    { "date": "2026-01-25", "opponent": "NJD", "location": "Home", "package": "Red" },
-    { "date": "2026-01-27", "opponent": "NYI", "location": "Home", "package": "Blue" },
-    { "date": "2026-01-29", "opponent": "TOR", "location": "Home", "package": "Red" },
-    { "date": "2026-01-31", "opponent": "ANA", "location": "Home", "package": "Blue" },
-    { "date": "2026-02-28", "opponent": "VAN", "location": "Home", "package": "Blue" },
-    { "date": "2026-03-03", "opponent": "CAR", "location": "Home", "package": "Blue" },
-    { "date": "2026-03-05", "opponent": "STL", "location": "Home", "package": "Blue" },
-    { "date": "2026-03-07", "opponent": "OTT", "location": "Home", "package": "Red" },
-    { "date": "2026-03-10", "opponent": "NSH", "location": "Home", "package": "Red" },
-    { "date": "2026-03-12", "opponent": "COL", "location": "Home", "package": "Blue" },
-    { "date": "2026-03-15", "opponent": "FLA", "location": "Home", "package": "Red" },
-    { "date": "2026-03-17", "opponent": "TBL", "location": "Home", "package": "Red" },
-    { "date": "2026-04-02", "opponent": "UTA", "location": "Home", "package": "Blue" },
-    { "date": "2026-04-04", "opponent": "CHI", "location": "Home", "package": "Red" },
-    { "date": "2026-04-13", "opponent": "LAK", "location": "Home", "package": "Blue" },
-    { "date": "2026-04-18", "opponent": "CGY", "location": "Home", "package": "Blue" }
-  ]
-};
-
-const KNOWN_SALES = {
-  "25-26": [
-    { date: "09/21/2025", opponent: "Vancouver Canucks", soldFor: 210.60, ticketsSold: 3, cost: 255.00, gainLoss: -44.40, emailLink: "https://mail.google.com/mail/u/0/#inbox/1991a70d3e39db14" },
-    { date: "10/11/2025", opponent: "Vegas Golden Knights", soldFor: 267.30, ticketsSold: 3, cost: 255.00, gainLoss: 12.30, emailLink: "https://mail.google.com/mail/u/0/#inbox/199beea54f61fec7" },
-    { date: "10/28/2025", opponent: "Montreal Canadiens", soldFor: 175.50, ticketsSold: 3, cost: 255.00, gainLoss: -79.50, emailLink: "https://mail.google.com/mail/u/0/#inbox/19a28a8b1dc1a036" },
-    { date: "11/15/2025", opponent: "San Jose Sharks", soldFor: 294.30, ticketsSold: 3, cost: 255.00, gainLoss: 39.30, emailLink: "https://mail.google.com/mail/u/0/#inbox/19a500dce8701f65" },
-    { date: "12/28/2025", opponent: "Philadelphia Flyers", soldFor: 332.10, ticketsSold: 3, cost: 255.00, gainLoss: 77.10, emailLink: "https://mail.google.com/mail/u/0/#inbox/19b154b103854d24" },
-    { date: "01/01/2026", opponent: "Nashville Predators", soldFor: 297.00, ticketsSold: 3, cost: 255.00, gainLoss: 42.00, emailLink: "https://mail.google.com/mail/u/0/#inbox/19b2e52ca55b4bfd" },
-    { date: "01/06/2026", opponent: "Boston Bruins", soldFor: 364.50, ticketsSold: 3, cost: 255.00, gainLoss: 109.50, emailLink: "https://mail.google.com/mail/u/0/#inbox/19b2519e4acece2e" },
-    { date: "01/21/2026", opponent: "New York Islanders", soldFor: 39.60, ticketsSold: 1, cost: 85.00, gainLoss: -45.40, emailLink: "https://mail.google.com/mail/u/0/#inbox/19be25db3b8ab581" },
-    { date: "01/23/2026", opponent: "Anaheim Ducks", soldFor: 136.80, ticketsSold: 2, cost: 170.00, gainLoss: -33.20, emailLink: "https://mail.google.com/mail/u/0/#inbox/19becfe25a4448c3" },
-    { date: "02/28/2026", opponent: "Vancouver Canucks", soldFor: 294.30, ticketsSold: 3, cost: 255.00, gainLoss: 39.30, emailLink: "https://mail.google.com/mail/u/0/#inbox/19ca1dad60428f06" },
-    { date: "03/02/2026", opponent: "Carolina Hurricanes", soldFor: 132.30, ticketsSold: 3, cost: 255.00, gainLoss: -122.70, emailLink: "https://mail.google.com/mail/u/0/#inbox/19caf942f93ab2ca" },
-    { date: "03/12/2026", opponent: "Colorado Avalanche", soldFor: 237.60, ticketsSold: 3, cost: 255.00, gainLoss: -17.40, emailLink: "https://mail.google.com/mail/u/0/#inbox/19cd5cceb6de4fe3" },
-    { date: "04/02/2026", opponent: "Utah Mammoth", soldFor: 197.10, ticketsSold: 3, cost: 255.00, gainLoss: -57.90, emailLink: "https://mail.google.com/mail/u/0/#inbox/19d363e1deebdf6e" },
-    { date: "04/11/2026", opponent: "Calgary Flames", soldFor: 256.50, ticketsSold: 3, cost: 255.00, gainLoss: 1.50, emailLink: "https://mail.google.com/mail/u/0/#inbox/19d5944531d59a7b" },
-    { date: "04/13/2026", opponent: "Los Angeles Kings", soldFor: 210.60, ticketsSold: 3, cost: 255.00, gainLoss: -44.40, emailLink: "https://mail.google.com/mail/u/0/#inbox/19d73d185cd2b9b6" },
-  ],
-  "24-25": [
-    { date: "11/20/2024", opponent: "Nashville Predators", soldFor: 297.00, ticketsSold: 3, cost: 279.00, gainLoss: 18.00, emailLink: "https://mail.google.com/mail/u/0/#inbox/192bf3c3ed3b4c7c" },
-    { date: "11/30/2024", opponent: "San Jose Sharks", soldFor: 351.00, ticketsSold: 3, cost: 279.00, gainLoss: 72.00, emailLink: "https://mail.google.com/mail/u/0/#inbox/1934c6770eec7247" },
-    { date: "12/30/2024", opponent: "Utah Hockey Club", soldFor: 73.80, ticketsSold: 1, cost: 93.00, gainLoss: -19.20, emailLink: "https://mail.google.com/mail/u/0/#inbox/1941550d8293190c" },
-    { date: "01/20/2025", opponent: "Buffalo Sabres", soldFor: 280.80, ticketsSold: 3, cost: 279.00, gainLoss: 1.80, emailLink: "https://mail.google.com/mail/u/0/#inbox/1942aa14c2c49b5d" },
-    { date: "01/25/2025", opponent: "Pittsburgh Penguins", soldFor: 90.90, ticketsSold: 1, cost: 93.00, gainLoss: -2.10, emailLink: "https://mail.google.com/mail/u/0/#inbox/1949eed22b846c58" },
-    { date: "02/02/2025", opponent: "Calgary Flames", soldFor: 305.10, ticketsSold: 3, cost: 279.00, gainLoss: 26.10, emailLink: "https://mail.google.com/mail/u/0/#inbox/1947ccc28a5e33d0" },
-    { date: "03/01/2025", opponent: "Vancouver Canucks", soldFor: 375.30, ticketsSold: 3, cost: 279.00, gainLoss: 96.30, emailLink: "https://mail.google.com/mail/u/0/#inbox/1950d23aa3b134a4" },
-    { date: "03/27/2025", opponent: "Edmonton Oilers", soldFor: 288.90, ticketsSold: 3, cost: 279.00, gainLoss: 9.90, emailLink: "https://mail.google.com/mail/u/0/#inbox/19563f909c705d23" },
-    { date: "03/29/2025", opponent: "Dallas Stars", soldFor: 321.30, ticketsSold: 3, cost: 279.00, gainLoss: 42.30, emailLink: "https://mail.google.com/mail/u/0/#inbox/195583ef1ec98a4e" },
-    { date: "04/12/2025", opponent: "St. Louis Blues", soldFor: 267.30, ticketsSold: 3, cost: 279.00, gainLoss: -11.70, emailLink: "https://mail.google.com/mail/u/0/#inbox/195ac66d9250b820" },
-  ],
-  "23-24": [
-    { date: "09/25/2023", opponent: "Calgary Flames (Preseason)", soldFor: 17.10, ticketsSold: 1, cost: 93.00, gainLoss: -75.90, emailLink: null },
-    { date: "11/11/2023", opponent: "Edmonton Oilers", soldFor: 364.50, ticketsSold: 3, cost: 279.00, gainLoss: 85.50, emailLink: null },
-    { date: "11/20/2023", opponent: "Calgary Flames", soldFor: 264.60, ticketsSold: 3, cost: 279.00, gainLoss: -14.40, emailLink: null },
-    { date: "12/07/2023", opponent: "New Jersey Devils", soldFor: 305.10, ticketsSold: 3, cost: 279.00, gainLoss: 26.10, emailLink: null },
-    { date: "12/12/2023", opponent: "Florida Panthers", soldFor: 299.70, ticketsSold: 3, cost: 279.00, gainLoss: 20.70, emailLink: null },
-    { date: "01/28/2024", opponent: "Columbus Blue Jackets", soldFor: 310.50, ticketsSold: 3, cost: 279.00, gainLoss: 31.50, emailLink: null },
-    { date: "02/24/2024", opponent: "Minnesota Wild", soldFor: 415.80, ticketsSold: 3, cost: 279.00, gainLoss: 136.80, emailLink: null },
-    { date: "02/26/2024", opponent: "Boston Bruins", soldFor: 529.20, ticketsSold: 3, cost: 279.00, gainLoss: 250.20, emailLink: null },
-    { date: "03/08/2024", opponent: "Winnipeg Jets", soldFor: 340.20, ticketsSold: 3, cost: 279.00, gainLoss: 61.20, emailLink: null },
-    { date: "03/14/2024", opponent: "Washington Capitals", soldFor: 307.80, ticketsSold: 3, cost: 279.00, gainLoss: 28.80, emailLink: null },
-    { date: "03/24/2024", opponent: "Montreal Canadiens", soldFor: 159.30, ticketsSold: 3, cost: 279.00, gainLoss: -119.70, emailLink: null },
-    { date: "03/26/2024", opponent: "Anaheim Ducks", soldFor: 103.50, ticketsSold: 1, cost: 93.00, gainLoss: 10.50, emailLink: null },
-    { date: "03/30/2024", opponent: "Dallas Stars", soldFor: 426.60, ticketsSold: 3, cost: 279.00, gainLoss: 147.60, emailLink: null },
-    { date: "04/11/2024", opponent: "San Jose Sharks", soldFor: 334.80, ticketsSold: 3, cost: 279.00, gainLoss: 55.80, emailLink: null },
-  ],
-  "22-23": [
-    { date: "10/27/2022", opponent: "Vancouver Canucks", soldFor: 339.00, ticketsSold: 3, cost: 270.00, gainLoss: 69.00, emailLink: "https://mail.google.com/mail/u/0/#inbox/18367df8f3aa8510" },
-    { date: "11/11/2022", opponent: "Minnesota Wild", soldFor: 378.00, ticketsSold: 3, cost: 270.00, gainLoss: 108.00, emailLink: "https://mail.google.com/mail/u/0/#inbox/1845d5c1cbe25dcc" },
-    { date: "12/06/2022", opponent: "Montreal Canadiens", soldFor: 324.00, ticketsSold: 3, cost: 270.00, gainLoss: 54.00, emailLink: "https://mail.google.com/mail/u/0/#inbox/1842a0f058c43bd5" },
-    { date: "12/20/2022", opponent: "St. Louis Blues", soldFor: 297.00, ticketsSold: 3, cost: 270.00, gainLoss: 27.00, emailLink: "https://mail.google.com/mail/u/0/#inbox/18376367551b19b9" },
-    { date: "02/16/2023", opponent: "Philadelphia Flyers", soldFor: 378.00, ticketsSold: 3, cost: 270.00, gainLoss: 108.00, emailLink: "https://mail.google.com/mail/u/0/#inbox/186424cd5b7e1254" },
-    { date: "03/09/2023", opponent: "Ottawa Senators", soldFor: 270.00, ticketsSold: 3, cost: 270.00, gainLoss: 0.00, emailLink: "https://mail.google.com/mail/u/0/#inbox/186c3f2392f806ac" },
-    { date: "03/13/2023", opponent: "Dallas Stars", soldFor: 312.00, ticketsSold: 3, cost: 270.00, gainLoss: 42.00, emailLink: "https://mail.google.com/mail/u/0/#inbox/186d32fc14efc289" },
-    { date: "04/08/2023", opponent: "Chicago Blackhawks", soldFor: 459.00, ticketsSold: 3, cost: 270.00, gainLoss: 189.00, emailLink: "https://mail.google.com/mail/u/0/#inbox/18754286ccca23c4" },
-    { date: "04/13/2023", opponent: "Vegas Golden Knights", soldFor: 363.00, ticketsSold: 3, cost: 270.00, gainLoss: 93.00, emailLink: "https://mail.google.com/mail/u/0/#inbox/187790c389d826f1" },
-    { date: "04/22/2023", opponent: "Colorado Avalanche (Playoffs)", soldFor: 270.00, ticketsSold: 1, cost: 90.00, gainLoss: 180.00, emailLink: "https://mail.google.com/mail/u/0/#inbox/1879c4a9e9059db8" },
-    { date: "04/28/2023", opponent: "Colorado Avalanche (Playoffs)", soldFor: 360.00, ticketsSold: 1, cost: 90.00, gainLoss: 270.00, emailLink: "https://mail.google.com/mail/u/0/#inbox/187c0fe63b94f943" },
-    { date: "05/09/2023", opponent: "Dallas Stars (Playoffs)", soldFor: 171.00, ticketsSold: 1, cost: 90.00, gainLoss: 81.00, emailLink: "https://mail.google.com/mail/u/0/#inbox/18802975eb082579" },
-  ],
-  "21-22": [
-    { date: "11/21/2021", opponent: "Washington Capitals", soldFor: 190.00, ticketsSold: 3, cost: 270.00, gainLoss: -80.00, emailLink: "#" },
-    { date: "01/15/2022", opponent: "Los Angeles Kings", soldFor: 252.00, ticketsSold: 3, cost: 270.00, gainLoss: -18.00, emailLink: "#" },
-    { date: "01/21/2022", opponent: "St. Louis Blues", soldFor: 450.00, ticketsSold: 3, cost: 270.00, gainLoss: 180.00, emailLink: "#" },
-    { date: "04/03/2022", opponent: "Dallas Stars", soldFor: 298.00, ticketsSold: 3, cost: 270.00, gainLoss: 28.00, emailLink: "#" },
-  ]
-};
-
-const checkMatch = (name1, name2) => {
-  const n1 = name1.toLowerCase();
-  const n2 = name2.toLowerCase();
-  if (n1.includes(n2) || n2.includes(n1)) return true;
-  const aliases = [
-    ['van', 'canuck'], ['vgk', 'knight', 'vegas'], ['mtl', 'canadien', 'montreal'], ['chi', 'blackhawk', 'chicago'],
-    ['cbj', 'jacket', 'columbus'], ['sjs', 'shark', 'san jose'], ['edm', 'oiler', 'edmonton'], ['min', 'wild', 'minnesota'], ['buf', 'sabre', 'buffalo'],
-    ['phi', 'flyer', 'philadelphia'], ['nsh', 'predator', 'nashville'], ['nyi', 'islander', 'new york'], ['ana', 'duck', 'anaheim'], ['car', 'hurricane', 'carolina'],
-    ['stl', 'blue', 'st. louis', 'st louis'], ['col', 'avalanche', 'colorado'], ['uta', 'mammoth', 'utah'], ['lak', 'king', 'los angeles'], ['cgy', 'flame', 'calgary'],
-    ['tbl', 'lightning', 'tampa'], ['njd', 'devil', 'new jersey'], ['tor', 'leaf', 'toronto'], ['pit', 'penguin', 'pittsburgh'], ['det', 'red wing', 'detroit'],
-    ['bos', 'bruin', 'boston'], ['dal', 'star', 'dallas'], ['ott', 'senator', 'ottawa'], ['fla', 'panther', 'florida'], ['wsh', 'capital', 'washington'],
-    ['wpg', 'jet', 'winnipeg'], ['ari', 'coyote', 'arizona'], ['nyr', 'ranger', 'ny rangers']
-  ];
-  for (let group of aliases) {
-    if (group.some(alias => n1.includes(alias)) && group.some(alias => n2.includes(alias))) return true;
-  }
-  return false;
-};
-
+// --- DATA ---
+// Everything personal lives in data/tickets.json: one row per game in the plan, kept or resold.
+// MAKE_YOUR_OWN.md tells Claude how to rebuild that file from someone else's tickets.
 const isPlayoff = (name) => name.toLowerCase().includes('playoff');
 const shortName = (name) => name.replace(/\s*\(.*\)$/, '');
 
 const buildSeasonsData = () => {
-  const seasonConfigs = [
-    { id: "25-26", title: "25-26", jsonKey: "2025-2026", packageSize: 22 },
-    { id: "24-25", title: "24-25", jsonKey: "2024-2025", packageSize: 22 },
-    { id: "23-24", title: "23-24", jsonKey: "2023-2024", packageSize: 22 },
-    { id: "22-23", title: "22-23", jsonKey: "2022-2023", packageSize: 22 },
-    { id: "21-22", title: "21-22", jsonKey: "2021-2022", packageSize: 22 },
-  ];
+  return TICKETS.seasons.map(season => {
+    const sales = season.games
+      .map(g => ({ ...g, isPackage: g.isPackage !== undefined ? g.isPackage : !isPlayoff(g.opponent) }))
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-  return seasonConfigs.map(config => {
-    const schedule = RAW_SCHEDULE[config.jsonKey] || [];
-    let blueGames = schedule.filter(g => g.package.includes("Blue"));
-    const sales = KNOWN_SALES[config.id] || [];
+    // Seat price for the ledger: the most common full-game cost in the plan, split across the seats
+    const costCounts = sales.filter(s => s.isPackage).reduce((acc, s) => ({ ...acc, [s.cost]: (acc[s.cost] || 0) + 1 }), {});
+    const gameCost = Number(Object.entries(costCounts).sort((a, b) => Number(b[1]) - Number(a[1]))[0]?.[0] || 0);
 
-    // Dynamically infer game cost from the first fully known sale inside the array
-    // Infer from a full 3-seat sale: a single-ticket row (e.g. 23-24's $93 preseason seat) would
-    // otherwise set every unsold game in the season to one seat's price
-    const sampleSale = sales.find(s => s.ticketsSold === 3 && s.cost > 0) || sales.find(s => s.cost > 0);
-    const inferredGameCost = sampleSale ? sampleSale.cost : 279; // fallback if no sales exist
-    const inferredTicketCost = inferredGameCost / 3;
-
-    let mergedSales = [];
-    let unmatchedSales = [...sales];
-
-    // 1. Cross-reference schedule with known sales to map official dates
-    blueGames.forEach(game => {
-      const matchIdx = unmatchedSales.findIndex(s => checkMatch(s.opponent, game.opponent) && !isPlayoff(s.opponent));
-      
-      if (matchIdx !== -1) {
-        mergedSales.push({
-          ...unmatchedSales[matchIdx],
-          date: game.date, // Enforce Official Schedule Date
-          ticketsKept: unmatchedSales[matchIdx].ticketsKept !== undefined ? unmatchedSales[matchIdx].ticketsKept : 3 - (unmatchedSales[matchIdx].ticketsSold || 0),
-          isPackage: true
-        });
-        unmatchedSales.splice(matchIdx, 1);
-      } else {
-        // Automatically inject as fully attended if unsold
-        if (config.id === '21-22') {
-          // Special targeted fallback for 21-22: 3rd ticket was always sold for face value internally
-          mergedSales.push({
-            date: game.date,
-            opponent: game.opponent,
-            soldFor: inferredTicketCost,
-            ticketsSold: 1,
-            ticketsKept: 2,
-            cost: inferredGameCost,
-            gainLoss: 0,
-            emailLink: null,
-            isPackage: true
-          });
-        } else {
-          mergedSales.push({
-            date: game.date,
-            opponent: game.opponent,
-            soldFor: 0,
-            ticketsSold: 0,
-            ticketsKept: 3,
-            cost: inferredGameCost,
-            gainLoss: 0,
-            emailLink: null,
-            isPackage: true
-          });
-        }
-      }
-    });
-
-    // 2. Add remaining overrides/playoffs
-    unmatchedSales.forEach(s => {
-      mergedSales.push({
-        ...s,
-        ticketsKept: s.ticketsKept !== undefined ? s.ticketsKept : 3 - (s.ticketsSold || 0),
-        isPackage: !isPlayoff(s.opponent)
-      });
-    });
-
-    // 3. Fallback padding to ensure divisor math matches strictly to the 22-game package limit
-    let packageCount = mergedSales.filter(s => s.isPackage).length;
-    let missingCount = config.packageSize - packageCount;
-    for (let i = 0; i < missingCount; i++) {
-      mergedSales.push({
-        date: `${config.jsonKey.split('-')[0]}-09-15`, // General Preseason Timestamp
-        opponent: "Preseason / Unlisted",
-        soldFor: config.id === '21-22' ? inferredTicketCost : 0,
-        ticketsSold: config.id === '21-22' ? 1 : 0,
-        ticketsKept: config.id === '21-22' ? 2 : 3,
-        cost: inferredGameCost,
-        gainLoss: 0,
-        emailLink: null,
-        isPackage: true
-      });
-    }
-
-    // 4. Calculate Core Metrics dynamically (Playoffs intentionally excluded)
+    // Playoffs are kept out of the season totals so years compare evenly
     let metrics = {
       upfrontCost: 0,
-      ticketCost: inferredTicketCost,
+      ticketCost: gameCost / SEATS,
       totalSold: 0,
       totalKept: 0,
       gamesAttended: 0,
@@ -1326,12 +943,9 @@ const buildSeasonsData = () => {
       gainLossSold: 0
     };
 
-    // Sort early so we can attach a stable tracking ID for unified hovers
-    mergedSales.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-    
-    mergedSales.forEach((s, idx) => {
+    sales.forEach((s, idx) => {
       s.saleId = idx;
-      s.seasonId = config.id; // Critical mapping for inter-component hover sync
+      s.seasonId = season.id; // Critical mapping for inter-component hover sync
       if (s.isPackage) {
         metrics.totalGamesInPackage++;
         metrics.upfrontCost += s.cost;
@@ -1348,10 +962,12 @@ const buildSeasonsData = () => {
     metrics.costPerTicketKept = metrics.totalKept > 0 ? metrics.netCost / metrics.totalKept : 0;
 
     return {
-      id: config.id,
-      title: config.title,
+      id: season.id,
+      title: season.title || season.id,
+      note: season.note || null,
+      showPartialGainLoss: !!season.showPartialGainLoss,
       metrics,
-      sales: mergedSales
+      sales
     };
   });
 };
@@ -1609,7 +1225,8 @@ export default function App() {
       acc[name] = (acc[name] || 0) + 1;
       return acc;
     }, {});
-    const [topOpponent, topCount] = Object.entries(resoldTo).sort((a, b) => b[1] - a[1])[0];
+    // a brand-new dataset may have no resales yet
+    const [topOpponent, topCount] = Object.entries(resoldTo).sort((a, b) => b[1] - a[1])[0] || [null, 0];
     return {
       seasons: seasonsData.length,
       evaluated: all.length,
@@ -1626,7 +1243,7 @@ export default function App() {
   const [hideAttended, setHideAttended] = useState(true);
   const [hoveredSale, setHoveredSale] = useState(null);
   const [highlightedRow, setHighlightedRow] = useState(null);
-  const [sortConfigs, setSortConfigs] = useState({ "25-26": { key: 'date', direction: 'asc' }, "24-25": { key: 'date', direction: 'asc' }, "23-24": { key: 'date', direction: 'asc' }, "22-23": { key: 'date', direction: 'asc' }, "21-22": { key: 'date', direction: 'asc' }, "search": { key: 'date', direction: 'asc' } });
+  const [sortConfigs, setSortConfigs] = useState(() => Object.fromEntries([...seasonsData.map(s => s.id), 'search'].map(id => [id, { key: 'date', direction: 'asc' }])));
   const filterInputRef = useRef(null);
 
   // "/" focuses search from anywhere, unless you're already typing in a field
@@ -1760,14 +1377,21 @@ export default function App() {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
           </div>
-          <p className="help-lede"><strong>{helpStats.evaluated}</strong> games across {helpStats.seasons} seasons, each matched to the official NHL schedule. Every seat I resold went through Ticketmaster's official resale platform, nowhere else.</p>
+          <p className="help-lede"><strong>{helpStats.evaluated}</strong> games across {helpStats.seasons} season{helpStats.seasons === 1 ? '' : 's'}{TICKETS.about ? `, ${TICKETS.about}` : '.'}</p>
           <ul className="help-list">
-            <li><strong>{helpStats.wins} of {helpStats.flips}</strong> games I resold beat what I paid ({Math.round(helpStats.wins / helpStats.flips * 100)}%)</li>
-            <li>Best flip <FormatMoney val={helpStats.best.gainLoss} showPlus={true} bold={true} /> vs {shortName(helpStats.best.opponent)} ({formatDate(helpStats.best.date)}); worst <FormatMoney val={helpStats.worst.gainLoss} showPlus={true} bold={true} /> vs {shortName(helpStats.worst.opponent)} ({formatDate(helpStats.worst.date)})</li>
+            {helpStats.flips > 0 && (
+              <>
+                <li><strong>{helpStats.wins} of {helpStats.flips}</strong> games I resold beat what I paid ({Math.round(helpStats.wins / helpStats.flips * 100)}%)</li>
+                <li>Best flip <FormatMoney val={helpStats.best.gainLoss} showPlus={true} bold={true} /> vs {shortName(helpStats.best.opponent)} ({formatDate(helpStats.best.date)}); worst <FormatMoney val={helpStats.worst.gainLoss} showPlus={true} bold={true} /> vs {shortName(helpStats.worst.opponent)} ({formatDate(helpStats.worst.date)})</li>
+              </>
+            )}
             {helpStats.playoffs > 0 && (
               <li><strong>{helpStats.playoffs}</strong> playoff games are in the tables and map but kept out of season totals. The best one went for <FormatMoney val={helpStats.bestPlayoff.gainLoss} showPlus={true} bold={true} /> vs {shortName(helpStats.bestPlayoff.opponent)}</li>
             )}
-            <li>Most resold: <strong>{helpStats.topOpponent}</strong>, {helpStats.topCount} games</li>
+            {helpStats.topOpponent && (
+              <li>Most resold: <strong>{helpStats.topOpponent}</strong>, {helpStats.topCount} games</li>
+            )}
+            <li>Want your own? <a href="./how/">Make one with your data&nbsp;→</a></li>
           </ul>
           <hans-footer></hans-footer>
         </div>
@@ -1777,10 +1401,10 @@ export default function App() {
         <header className="header-system">
           <div className="top-bar">
             <div className="logo-container">
-              <span className="main-logo-icon" role="img" aria-label="Kraken" />
+              <span className="main-logo-icon" role="img" aria-label={TICKETS.logoLabel} />
               <div className="header-text">
-                <h2 className="header-title">Kraken season ticket analyzer</h2>
-                <p className="header-subtitle">Hans' data from the first 5 seasons of season tickets, 2021–2026</p>
+                <h2 className="header-title">{TICKETS.title}</h2>
+                <p className="header-subtitle">{TICKETS.subtitle}</p>
               </div>
             </div>
             
@@ -1825,7 +1449,7 @@ export default function App() {
                 </div>
                 <div className="summary-item">
                   <div className="value"><FormatMoney val={aggregateStats.avgCostPerGame} /></div>
-                  <div className="label">Avg cost per game (3 tix)</div>
+                  <div className="label">Avg cost per game ({SEATS} tix)</div>
                 </div>
                 <div className="summary-item full-width-mobile">
                   <div className="mini-map-header">
@@ -1932,7 +1556,7 @@ export default function App() {
                             <td style={{ fontSize: 'var(--text-base)', fontWeight: 700 }}>{formatDate(row.date)}</td>
                             <td style={{ fontWeight: 700, color: 'var(--color-text-dark)', fontSize: 'var(--text-base)', textTransform: 'uppercase' }}>{row.opponent} <span style={{fontSize: 'var(--text-xs)', fontWeight: 400, opacity: 0.6, marginLeft: '4.5px'}}>[{row.seasonId}]</span></td>
                             <td style={{ fontWeight: 700, color: row.gainLoss > 0 ? 'var(--color-success-primary)' : row.gainLoss < 0 ? 'var(--color-danger-primary)' : 'var(--color-text-dim)' }}>
-                              {(row.ticketsSold > 0 && row.ticketsKept === 0) || row.seasonId === '21-22' ? <FormatMoney val={row.gainLoss} showPlus={true} /> : <span style={{ opacity: 0.5 }}>—</span>}
+                              {(row.ticketsSold > 0 && row.ticketsKept === 0) || PARTIAL_GL_SEASONS.has(row.seasonId) ? <FormatMoney val={row.gainLoss} showPlus={true} /> : <span style={{ opacity: 0.5 }}>—</span>}
                             </td>
                             <td style={{ color: 'var(--color-text-dark)', fontWeight: 600 }}>{row.soldFor > 0 ? <FormatMoney val={row.soldFor} /> : <span style={{ opacity: 0.5 }}>—</span>}</td>
                             <td style={{ opacity: 0.7 }}><FormatMoney val={row.cost} /></td>
@@ -1958,7 +1582,7 @@ export default function App() {
             <section key={season.id} className="season-group">
               <h2 className="section-title">
                 {season.title}
-                {season.id === '21-22' && <span style={{ fontSize: '7.5px', marginLeft: '9px', color: 'var(--color-text-dim)', fontWeight: '500', textTransform: 'none', letterSpacing: '0' }}>(Includes $90 recoup per attended game)</span>}
+                {season.note && <span style={{ fontSize: '7.5px', marginLeft: '9px', color: 'var(--color-text-dim)', fontWeight: '500', textTransform: 'none', letterSpacing: '0' }}>{season.note}</span>}
               </h2>
               <div className="season-card">
                 <SeasonLedger metrics={season.metrics} />
@@ -1991,7 +1615,7 @@ export default function App() {
                             onMouseLeave={() => setHoveredSale(null)}
                           >
                             <td style={{ fontWeight: 700, color: row.gainLoss > 0 ? 'var(--color-success-primary)' : row.gainLoss < 0 ? 'var(--color-danger-primary)' : 'var(--color-border-base)' }}>
-                              {(row.ticketsSold > 0 && row.ticketsKept === 0) || season.id === '21-22' ? <FormatMoney val={row.gainLoss} showPlus={true} /> : <span style={{ opacity: 0.5 }}>—</span>}
+                              {(row.ticketsSold > 0 && row.ticketsKept === 0) || season.showPartialGainLoss ? <FormatMoney val={row.gainLoss} showPlus={true} /> : <span style={{ opacity: 0.5 }}>—</span>}
                             </td>
                             <td style={{ color: 'var(--color-text-dark)', fontWeight: 600 }}>{row.soldFor > 0 ? <FormatMoney val={row.soldFor} /> : <span style={{ opacity: 0.5 }}>—</span>}</td>
                             <td style={{ opacity: 0.7 }}><FormatMoney val={row.cost} /></td>

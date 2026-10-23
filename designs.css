@@ -304,6 +304,8 @@ html[data-design]:not([data-design="original"]) body .app-container .row-highlig
 .help-list li { margin-bottom: 10px; }
 .help-list li:last-child { margin-bottom: 0; }
 .help-list strong { color: var(--color-text-dark); font-weight: 700; }
+.help-list a { color: var(--color-text-dark); font-weight: 700; text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; }
+.help-list a:hover { text-decoration-thickness: 2px; }
 hans-footer:not(:defined) { display: block; min-height: 76px; }
 
 /* --------------------------------------------------------------------------

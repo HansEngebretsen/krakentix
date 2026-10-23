@@ -9,7 +9,8 @@
   "scripts": {
     "dev": "node build.mjs --serve",
     "start": "npm run dev",
-    "build": "node build.mjs"
+    "build": "node build.mjs",
+    "check": "node scripts/check.mjs"
   },
   "dependencies": {
     "react": "^19.2.3",
