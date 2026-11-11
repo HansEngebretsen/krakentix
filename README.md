@@ -23,20 +23,24 @@ Five seasons of Seattle Kraken season tickets, every seat I kept or resold, laid
 <p>Every game is a dot on the mini-map. Hover one for the opponent and what the seats went for, click it and the page jumps to that sale and highlights it.</p>
 </td>
 <td width="50%">
+<a href="demos/jump@zoom.avif">
 <picture>
 <source media="(min-width: 1024px)" type="image/avif" srcset="demos/jump@2x.avif">
 <source type="image/avif" srcset="demos/jump.avif">
 <img src="demos/jump.gif" alt="Jump to any game">
 </picture>
+</a>
 </td>
 </tr>
 <tr valign="top">
 <td width="50%">
+<a href="demos/search@zoom.avif">
 <picture>
 <source media="(min-width: 1024px)" type="image/avif" srcset="demos/search@2x.avif">
 <source type="image/avif" srcset="demos/search.avif">
 <img src="demos/search.gif" alt="Search every season">
 </picture>
+</a>
 </td>
 <td width="50%">
 <h3>Search every season</h3>
@@ -49,11 +53,13 @@ Five seasons of Seattle Kraken season tickets, every seat I kept or resold, laid
 <p>One button walks through black and white, the original blueberry slate, and Kraken ink, each in light and dark.</p>
 </td>
 <td width="50%">
+<a href="demos/themes@zoom.avif">
 <picture>
 <source media="(min-width: 1024px)" type="image/avif" srcset="demos/themes@2x.avif">
 <source type="image/avif" srcset="demos/themes.avif">
 <img src="demos/themes.gif" alt="Cycle the themes">
 </picture>
+</a>
 </td>
 </tr>
 <tr valign="top">
