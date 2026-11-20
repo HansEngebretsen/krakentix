@@ -1,6 +1,6 @@
 # `krakentix`
 
-Five seasons of Seattle Kraken season tickets, every seat I kept or resold, laid out so you can see in one glance what the hockey actually cost.
+Five-season analysis of season ticket spend and sales. Every seat I kept or resold, laid out so you can see in one glance what the hockey actually cost.
 
 
 <div align="center">
